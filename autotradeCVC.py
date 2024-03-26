@@ -33,10 +33,9 @@ def get_current_status():
 
 def fetch_and_prepare_data():
     # Fetch data
-    df_daily = pyupbit.get_ohlcv("KRW-CVC", "minute60", count=24)
-    df_hourly = pyupbit.get_ohlcv("KRW-CVC", interval="minute5", count=12)
-
-    # Define a helper function to add indicators
+    df_daily = pyupbit.get_ohlcv("KRW-CVC", interval="day", count=30)
+    df_hourly = pyupbit.get_ohlcv("KRW-CVC", interval="minute20", count=24)
+   # Define a helper function to add indicators
     def add_indicators(df):
         # Moving Averages
         df['SMA_10'] = ta.sma(df['close'], length=10)
@@ -150,8 +149,8 @@ def make_decision_and_execute():
 
 if __name__ == "__main__":
     make_decision_and_execute()
-    schedule.every().hour.at(":01").do(make_decision_and_execute)
-    #schedule.every(20).minutes.do(make_decision_and_execute)
+    #schedule.every().hour.at(":01").do(make_decision_and_execute)
+    schedule.every(20).minutes.do(make_decision_and_execute)
 
     while True:
         schedule.run_pending()
