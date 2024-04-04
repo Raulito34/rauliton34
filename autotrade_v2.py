@@ -26,9 +26,10 @@ def initialize_db(db_path='trading_decisions.sqlite'):
                 decision TEXT,
                 percentage REAL,
                 reason TEXT,
-                bch_balance REAL,
+                btc_balance REAL,
                 krw_balance REAL,
-                bch_avg_buy_price REAL
+                btc_avg_buy_price REAL,
+                btc_krw_price REAL
             );
         ''')
         conn.commit()
@@ -40,21 +41,23 @@ def save_decision_to_db(decision, current_status):
     
         # Parsing current_status from JSON to Python dict
         status_dict = json.loads(current_status)
+        current_price = pyupbit.get_orderbook(ticker="KRW-BTC")['orderbook_units'][0]["ask_price"]
         
         # Preparing data for insertion
         data_to_insert = (
             decision.get('decision'),
             decision.get('percentage', 100),  # Defaulting to 100 if not provided
             decision.get('reason', ''),  # Defaulting to an empty string if not provided
-            status_dict.get('bch_balance'),
+            status_dict.get('btc_balance'),
             status_dict.get('krw_balance'),
-            status_dict.get('bch_avg_buy_price')
+            status_dict.get('btc_avg_buy_price'),
+            current_price
         )
         
         # Inserting data into the database
         cursor.execute('''
-            INSERT INTO decisions (timestamp, decision, percentage, reason, bch_balance, krw_balance, bch_avg_buy_price)
-            VALUES (datetime('now', 'localtime'), ?, ?, ?, ?, ?, ?)
+            INSERT INTO decisions (timestamp, decision, percentage, reason, btc_balance, krw_balance, btc_avg_buy_price, btc_krw_price)
+            VALUES (datetime('now', 'localtime'), ?, ?, ?, ?, ?, ?, ?)
         ''', data_to_insert)
     
         conn.commit()
@@ -63,7 +66,7 @@ def fetch_last_decisions(db_path='trading_decisions.sqlite', num_decisions=10):
     with sqlite3.connect(db_path) as conn:
         cursor = conn.cursor()
         cursor.execute('''
-            SELECT timestamp, decision, percentage, reason, bch_balance, krw_balance, bch_avg_buy_price FROM decisions
+            SELECT timestamp, decision, percentage, reason, btc_balance, krw_balance, btc_avg_buy_price FROM decisions
             ORDER BY timestamp DESC
             LIMIT ?
         ''', (num_decisions,))
@@ -81,9 +84,9 @@ def fetch_last_decisions(db_path='trading_decisions.sqlite', num_decisions=10):
                     "decision": decision[1],
                     "percentage": decision[2],
                     "reason": decision[3],
-                    "bch_balance": decision[4],
+                    "btc_balance": decision[4],
                     "krw_balance": decision[5],
-                    "bch_avg_buy_price": decision[6]
+                    "btc_avg_buy_price": decision[6]
                 }
                 formatted_decisions.append(str(formatted_decision))
             return "\n".join(formatted_decisions)
@@ -91,27 +94,27 @@ def fetch_last_decisions(db_path='trading_decisions.sqlite', num_decisions=10):
             return "No decisions found."
 
 def get_current_status():
-    orderbook = pyupbit.get_orderbook(ticker="KRW-bch")
+    orderbook = pyupbit.get_orderbook(ticker="KRW-BTC")
     current_time = orderbook['timestamp']
-    bch_balance = 0
+    btc_balance = 0
     krw_balance = 0
-    bch_avg_buy_price = 0
+    btc_avg_buy_price = 0
     balances = upbit.get_balances()
     for b in balances:
-        if b['currency'] == "bch":
-            bch_balance = b['balance']
-            bch_avg_buy_price = b['avg_buy_price']
+        if b['currency'] == "BTC":
+            btc_balance = b['balance']
+            btc_avg_buy_price = b['avg_buy_price']
         if b['currency'] == "KRW":
             krw_balance = b['balance']
 
-    current_status = {'current_time': current_time, 'orderbook': orderbook, 'bch_balance': bch_balance, 'krw_balance': krw_balance, 'bch_avg_buy_price': bch_avg_buy_price}
+    current_status = {'current_time': current_time, 'orderbook': orderbook, 'btc_balance': btc_balance, 'krw_balance': krw_balance, 'btc_avg_buy_price': btc_avg_buy_price}
     return json.dumps(current_status)
 
 
 def fetch_and_prepare_data():
     # Fetch data
-    df_daily = pyupbit.get_ohlcv("KRW-bch", "day", count=30)
-    df_hourly = pyupbit.get_ohlcv("KRW-bch", interval="minute60", count=24)
+    df_daily = pyupbit.get_ohlcv("KRW-BTC", "day", count=30)
+    df_hourly = pyupbit.get_ohlcv("KRW-BTC", interval="minute60", count=24)
 
     # Define a helper function to add indicators
     def add_indicators(df):
@@ -155,7 +158,7 @@ def fetch_and_prepare_data():
 
 def get_news_data():
     ### Get news data from SERPAPI
-    url = "https://serpapi.com/search.json?engine=google_news&q=bch&api_key=" + os.getenv("SERPAPI_API_KEY")
+    url = "https://serpapi.com/search.json?engine=google_news&q=btc&api_key=" + os.getenv("SERPAPI_API_KEY")
 
     result = "No news data available."
 
@@ -243,24 +246,24 @@ def analyze_data_with_gpt4(news_data, data_json, last_decisions, fear_and_greed,
         return None
 
 def execute_buy(percentage):
-    print("Attempting to buy bch with a percentage of KRW balance...")
+    print("Attempting to buy BTC with a percentage of KRW balance...")
     try:
         krw_balance = upbit.get_balance("KRW")
         amount_to_invest = krw_balance * (percentage / 100)
         if amount_to_invest > 5000:  # Ensure the order is above the minimum threshold
-            result = upbit.buy_market_order("KRW-bch", amount_to_invest * 0.9995)  # Adjust for fees
+            result = upbit.buy_market_order("KRW-BTC", amount_to_invest * 0.9995)  # Adjust for fees
             print("Buy order successful:", result)
     except Exception as e:
         print(f"Failed to execute buy order: {e}")
 
 def execute_sell(percentage):
-    print("Attempting to sell a percentage of bch...")
+    print("Attempting to sell a percentage of BTC...")
     try:
-        bch_balance = upbit.get_balance("bch")
-        amount_to_sell = bch_balance * (percentage / 100)
-        current_price = pyupbit.get_orderbook(ticker="KRW-bch")['orderbook_units'][0]["ask_price"]
+        btc_balance = upbit.get_balance("BTC")
+        amount_to_sell = btc_balance * (percentage / 100)
+        current_price = pyupbit.get_orderbook(ticker="KRW-BTC")['orderbook_units'][0]["ask_price"]
         if current_price * amount_to_sell > 5000:  # Ensure the order is above the minimum threshold
-            result = upbit.sell_market_order("KRW-bch", amount_to_sell)
+            result = upbit.sell_market_order("KRW-BTC", amount_to_sell)
             print("Sell order successful:", result)
     except Exception as e:
         print(f"Failed to execute sell order: {e}")
@@ -307,16 +310,17 @@ def make_decision_and_execute():
 if __name__ == "__main__":
     initialize_db()
     #testing
-    # schedule.every().minute.do(make_decision_and_execute)
+    #make_decision_and_execute
+    #schedule.every(1).minute.do(make_decision_and_execute)
 
     # Schedule the task to run at 00:01
-    schedule.every().day.at("00:01").do(make_decision_and_execute)
+    schedule.every().day.at("09:01").do(make_decision_and_execute)
 
     # Schedule the task to run at 08:01
-    schedule.every().day.at("08:01").do(make_decision_and_execute)
+    schedule.every().day.at("17:01").do(make_decision_and_execute)
 
     # Schedule the task to run at 16:01
-    schedule.every().day.at("16:01").do(make_decision_and_execute)
+    schedule.every().day.at("01:01").do(make_decision_and_execute)
 
     while True:
         schedule.run_pending()
