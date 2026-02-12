@@ -70,8 +70,9 @@ export default function ApplyPage() {
         message: form.message,
       });
       setSubmitted(true);
-    } catch {
-      setError('신청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(`신청 중 오류가 발생했습니다: ${msg}`);
     } finally {
       setSubmitting(false);
     }
