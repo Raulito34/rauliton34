@@ -12,7 +12,7 @@ const allowedOrigins = process.env.CLIENT_URL
   : ['http://localhost:3000'];
 
 app.use(cors({ origin: allowedOrigins }));
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 // --- Admin auth middleware ---
 const ADMIN_CODE = process.env.ADMIN_CODE || 'admin1234';
@@ -51,6 +51,29 @@ app.get('/api/exhibitions/:id', async (req, res) => {
   });
   if (!exhibition) return res.status(404).json({ error: 'Not found' });
   res.json(exhibition);
+});
+
+app.post('/api/exhibitions', requireAdmin, async (req, res) => {
+  const { title, artist, description, startDate, endDate, floor, imageUrl, status, details } = req.body;
+  const exhibition = await prisma.exhibition.create({
+    data: { title, artist, description, startDate, endDate, floor, imageUrl, status: status || 'upcoming', details: details || '' },
+  });
+  res.status(201).json(exhibition);
+});
+
+app.patch('/api/exhibitions/:id', requireAdmin, async (req, res) => {
+  const exhibition = await prisma.exhibition.update({
+    where: { id: Number(req.params.id) },
+    data: req.body,
+  });
+  res.json(exhibition);
+});
+
+app.delete('/api/exhibitions/:id', requireAdmin, async (req, res) => {
+  await prisma.exhibition.delete({
+    where: { id: Number(req.params.id) },
+  });
+  res.json({ success: true });
 });
 
 // --- Spaces ---
@@ -140,6 +163,29 @@ app.get('/api/news/:id', async (req, res) => {
   });
   if (!item) return res.status(404).json({ error: 'Not found' });
   res.json(item);
+});
+
+app.post('/api/news', requireAdmin, async (req, res) => {
+  const { title, content, category } = req.body;
+  const item = await prisma.news.create({
+    data: { title, content, category },
+  });
+  res.status(201).json(item);
+});
+
+app.patch('/api/news/:id', requireAdmin, async (req, res) => {
+  const item = await prisma.news.update({
+    where: { id: Number(req.params.id) },
+    data: req.body,
+  });
+  res.json(item);
+});
+
+app.delete('/api/news/:id', requireAdmin, async (req, res) => {
+  await prisma.news.delete({
+    where: { id: Number(req.params.id) },
+  });
+  res.json({ success: true });
 });
 
 // --- Contact ---

@@ -45,6 +45,16 @@ async function postJson<T>(url: string, data: unknown): Promise<T> {
   return res.json();
 }
 
+async function postJsonAdmin<T>(url: string, data: unknown): Promise<T> {
+  const res = await fetch(`${API_BASE}${url}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...adminHeaders() },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error(`API error: ${res.status}`);
+  return res.json();
+}
+
 async function patchJson<T>(url: string, data: unknown): Promise<T> {
   const res = await fetch(`${API_BASE}${url}`, {
     method: 'PATCH',
@@ -67,6 +77,11 @@ export const api = {
   getExhibitions: (status?: string) =>
     fetchJson<Exhibition[]>(status ? `/exhibitions?status=${status}` : '/exhibitions'),
   getExhibition: (id: number) => fetchJson<Exhibition>(`/exhibitions/${id}`),
+  createExhibition: (data: Omit<Exhibition, 'id'> & { details?: string }) =>
+    postJsonAdmin<Exhibition>('/exhibitions', data),
+  updateExhibition: (id: number, data: Partial<Exhibition> & { details?: string }) =>
+    patchJson<Exhibition>(`/exhibitions/${id}`, data),
+  deleteExhibition: (id: number) => deleteJson(`/exhibitions/${id}`),
   getSpaces: () => fetchJson<Space[]>('/spaces'),
   getSpace: (floor: string) => fetchJson<Space>(`/spaces/${floor}`),
   getPricing: () => fetchJson<RentalPricing[]>('/pricing'),
@@ -79,5 +94,9 @@ export const api = {
   getNews: (category?: string) =>
     fetchJson<NewsItem[]>(category ? `/news?category=${category}` : '/news'),
   getNewsItem: (id: number) => fetchJson<NewsItem>(`/news/${id}`),
+  createNews: (data: Omit<NewsItem, 'id' | 'createdAt'>) => postJsonAdmin<NewsItem>('/news', data),
+  updateNews: (id: number, data: Partial<Omit<NewsItem, 'id' | 'createdAt'>>) =>
+    patchJson<NewsItem>(`/news/${id}`, data),
+  deleteNews: (id: number) => deleteJson(`/news/${id}`),
   submitContact: (data: ContactForm) => postJson('/contact', data),
 };
