@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Noto Sans KR', system-ui, -apple-system, sans-serif;
+  --color-primary: #1a1a2e;
+  --color-secondary: #16213e;
+  --color-accent: #c9a96e;
+  --color-accent-light: #e0c994;
+  --color-light: #f5f5f5;
+  --color-dark: #0f0f23;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
