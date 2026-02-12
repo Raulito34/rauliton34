@@ -1,6 +1,8 @@
 import type { Exhibition, Space, RentalPricing, RentalApplication, NewsItem, ContactForm } from '../types';
 
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : '/api';
 
 async function fetchJson<T>(url: string): Promise<T> {
   const res = await fetch(`${API_BASE}${url}`);
