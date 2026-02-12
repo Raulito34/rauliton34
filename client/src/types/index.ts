@@ -53,6 +53,16 @@ export interface NewsItem {
   thumbnail?: string;
 }
 
+export interface RentalBooking {
+  id: string;
+  spaceName: string;
+  startDate: string;
+  endDate: string;
+  status: 'reviewing' | 'confirmed';
+  applicantName: string;
+  purpose: string;
+}
+
 export interface ContactForm {
   name: string;
   email: string;

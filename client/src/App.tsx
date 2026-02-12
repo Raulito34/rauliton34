@@ -14,6 +14,7 @@ import ProcedurePage from './pages/Rental/ProcedurePage';
 import PricingPage from './pages/Rental/PricingPage';
 import TermsPage from './pages/Rental/TermsPage';
 import ApplyPage from './pages/Rental/ApplyPage';
+import StatusPage from './pages/Rental/StatusPage';
 import NewsPage from './pages/News/NewsPage';
 import ContactPage from './pages/Contact/ContactPage';
 
@@ -36,6 +37,7 @@ function App() {
           <Route path="/rental/pricing" element={<PricingPage />} />
           <Route path="/rental/terms" element={<TermsPage />} />
           <Route path="/rental/apply" element={<ApplyPage />} />
+          <Route path="/rental/status" element={<StatusPage />} />
           <Route path="/news" element={<NewsPage />} />
           <Route path="/contact" element={<ContactPage />} />
         </Route>

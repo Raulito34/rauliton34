@@ -16,7 +16,7 @@ export default function RentalPage() {
             아트센터의 전시 공간을 대관하여 여러분의 예술 작품을 선보이세요.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             <Link to="/rental/procedure" className="group p-8 bg-light rounded hover:shadow-lg transition-shadow text-center">
               <div className="w-14 h-14 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-white text-xl font-bold">01</span>
@@ -47,6 +47,14 @@ export default function RentalPage() {
               </div>
               <h3 className="text-lg font-bold text-primary group-hover:text-accent transition-colors mb-2">대관신청</h3>
               <p className="text-sm text-gray-600">온라인으로 대관 신청서를 제출하세요.</p>
+            </Link>
+
+            <Link to="/rental/status" className="group p-8 bg-light rounded hover:shadow-lg transition-shadow text-center">
+              <div className="w-14 h-14 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-white text-xl font-bold">05</span>
+              </div>
+              <h3 className="text-lg font-bold text-primary group-hover:text-accent transition-colors mb-2">대관현황</h3>
+              <p className="text-sm text-gray-600">전시관별 대관 가능 일정을 확인하세요.</p>
             </Link>
           </div>
         </div>

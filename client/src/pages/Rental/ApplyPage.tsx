@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
 import type { RentalApplication } from '../../types';
+import { addBooking } from '../../services/rentalStore';
 
 const spaceOptions = [
   'B1F 제1전시관',
@@ -10,6 +12,8 @@ const spaceOptions = [
 ];
 
 export default function ApplyPage() {
+  const [searchParams] = useSearchParams();
+
   const [form, setForm] = useState<RentalApplication>({
     spaceName: '',
     applicantName: '',
@@ -23,6 +27,23 @@ export default function ApplyPage() {
   });
   const [submitted, setSubmitted] = useState(false);
 
+  // Pre-fill from query params (from StatusPage)
+  useEffect(() => {
+    const space = searchParams.get('space');
+    const startDate = searchParams.get('startDate');
+    const endDate = searchParams.get('endDate');
+    if (space || startDate || endDate) {
+      setForm((prev) => ({
+        ...prev,
+        ...(space && { spaceName: space }),
+        ...(startDate && { startDate }),
+        ...(endDate && { endDate }),
+      }));
+    }
+  }, [searchParams]);
+
+  const fromStatus = searchParams.has('space');
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
@@ -31,7 +52,15 @@ export default function ApplyPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In production, call api.submitRental(form)
+    // Save to localStorage so StatusPage reflects the booking
+    addBooking({
+      spaceName: form.spaceName,
+      startDate: form.startDate,
+      endDate: form.endDate,
+      status: 'reviewing',
+      applicantName: form.applicantName,
+      purpose: form.purpose,
+    });
     setSubmitted(true);
   };
 
@@ -53,10 +82,16 @@ export default function ApplyPage() {
             </div>
             <h2 className="text-2xl font-bold text-primary mb-4">신청이 완료되었습니다</h2>
             <p className="text-gray-600 mb-2">대관 신청서가 정상적으로 접수되었습니다.</p>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 mb-8">
               담당자 검토 후 입력하신 이메일로 결과를 안내드리겠습니다.<br />
               (심사기간: 약 2주 소요)
             </p>
+            <Link
+              to="/rental/status"
+              className="text-accent hover:text-accent-light text-sm font-medium underline underline-offset-4"
+            >
+              대관현황 확인하기
+            </Link>
           </div>
         </section>
       </div>
@@ -74,6 +109,12 @@ export default function ApplyPage() {
 
       <section className="py-16 bg-white">
         <div className="max-w-3xl mx-auto px-4">
+          {fromStatus && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8 text-sm text-blue-800">
+              대관현황에서 선택한 정보가 자동으로 입력되었습니다. 대관 기간을 아래에서 조정할 수 있습니다.
+            </div>
+          )}
+
           <p className="text-center text-gray-600 mb-10">
             아래 양식을 작성하여 대관 신청을 해주세요. <span className="text-red-500">*</span> 표시는 필수 항목입니다.
           </p>
