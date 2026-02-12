@@ -60,7 +60,12 @@ export interface RentalBooking {
   endDate: string;
   status: 'reviewing' | 'confirmed';
   applicantName: string;
+  organization: string;
+  email: string;
+  phone: string;
   purpose: string;
+  message: string;
+  createdAt: string;
 }
 
 export interface ContactForm {

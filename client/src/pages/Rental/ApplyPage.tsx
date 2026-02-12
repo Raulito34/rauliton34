@@ -59,7 +59,11 @@ export default function ApplyPage() {
       endDate: form.endDate,
       status: 'reviewing',
       applicantName: form.applicantName,
+      organization: form.organization,
+      email: form.email,
+      phone: form.phone,
       purpose: form.purpose,
+      message: form.message,
     });
     setSubmitted(true);
   };
@@ -86,12 +90,20 @@ export default function ApplyPage() {
               담당자 검토 후 입력하신 이메일로 결과를 안내드리겠습니다.<br />
               (심사기간: 약 2주 소요)
             </p>
-            <Link
-              to="/rental/status"
-              className="text-accent hover:text-accent-light text-sm font-medium underline underline-offset-4"
-            >
-              대관현황 확인하기
-            </Link>
+            <div className="flex items-center justify-center gap-6">
+              <Link
+                to="/rental/list"
+                className="bg-accent text-white px-6 py-2.5 text-sm font-medium hover:bg-accent-light transition-colors rounded"
+              >
+                신청내역 확인
+              </Link>
+              <Link
+                to="/rental/status"
+                className="text-accent hover:text-accent-light text-sm font-medium underline underline-offset-4"
+              >
+                대관현황 보기
+              </Link>
+            </div>
           </div>
         </section>
       </div>

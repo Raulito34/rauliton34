@@ -40,6 +40,7 @@ const navItems = [
       { label: '대관규약', path: '/rental/terms' },
       { label: '대관신청', path: '/rental/apply' },
       { label: '대관현황', path: '/rental/status' },
+      { label: '신청내역', path: '/rental/list' },
     ],
   },
   {

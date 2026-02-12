@@ -11,15 +11,30 @@ export function getBookings(): RentalBooking[] {
   }
 }
 
-export function addBooking(booking: Omit<RentalBooking, 'id'>): RentalBooking {
+export function addBooking(booking: Omit<RentalBooking, 'id' | 'createdAt'>): RentalBooking {
   const bookings = getBookings();
   const newBooking: RentalBooking = {
     ...booking,
     id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    createdAt: new Date().toISOString(),
   };
   bookings.push(newBooking);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(bookings));
   return newBooking;
+}
+
+export function updateBookingStatus(id: string, status: RentalBooking['status']): void {
+  const bookings = getBookings();
+  const idx = bookings.findIndex((b) => b.id === id);
+  if (idx !== -1) {
+    bookings[idx].status = status;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(bookings));
+  }
+}
+
+export function deleteBooking(id: string): void {
+  const bookings = getBookings().filter((b) => b.id !== id);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(bookings));
 }
 
 /** Check if a given space has any booking overlapping with [weekStart, weekEnd] */
