@@ -54,11 +54,11 @@ export interface NewsItem {
 }
 
 export interface RentalBooking {
-  id: string;
+  id: number;
   spaceName: string;
   startDate: string;
   endDate: string;
-  status: 'reviewing' | 'confirmed';
+  status: string;
   applicantName: string;
   organization: string;
   email: string;

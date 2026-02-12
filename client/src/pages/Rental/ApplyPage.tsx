@@ -26,6 +26,8 @@ export default function ApplyPage() {
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Pre-fill from query params (from StatusPage)
   useEffect(() => {
@@ -50,22 +52,29 @@ export default function ApplyPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Save to localStorage so StatusPage reflects the booking
-    addBooking({
-      spaceName: form.spaceName,
-      startDate: form.startDate,
-      endDate: form.endDate,
-      status: 'reviewing',
-      applicantName: form.applicantName,
-      organization: form.organization,
-      email: form.email,
-      phone: form.phone,
-      purpose: form.purpose,
-      message: form.message,
-    });
-    setSubmitted(true);
+    setSubmitting(true);
+    setError(null);
+    try {
+      await addBooking({
+        spaceName: form.spaceName,
+        startDate: form.startDate,
+        endDate: form.endDate,
+        status: 'pending',
+        applicantName: form.applicantName,
+        organization: form.organization,
+        email: form.email,
+        phone: form.phone,
+        purpose: form.purpose,
+        message: form.message,
+      });
+      setSubmitted(true);
+    } catch {
+      setError('신청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -270,13 +279,21 @@ export default function ApplyPage() {
               />
             </div>
 
+            {/* Error */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-700">
+                {error}
+              </div>
+            )}
+
             {/* Submit */}
             <div className="text-center pt-4">
               <button
                 type="submit"
-                className="bg-accent text-white px-12 py-3 text-sm font-medium hover:bg-accent-light transition-colors"
+                disabled={submitting}
+                className="bg-accent text-white px-12 py-3 text-sm font-medium hover:bg-accent-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                대관 신청하기
+                {submitting ? '신청 중...' : '대관 신청하기'}
               </button>
             </div>
           </form>

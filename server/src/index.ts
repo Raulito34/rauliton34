@@ -77,6 +77,22 @@ app.get('/api/rentals', async (_req, res) => {
   res.json(rentals);
 });
 
+app.patch('/api/rentals/:id', async (req, res) => {
+  const { status } = req.body;
+  const rental = await prisma.rental.update({
+    where: { id: Number(req.params.id) },
+    data: { status },
+  });
+  res.json(rental);
+});
+
+app.delete('/api/rentals/:id', async (req, res) => {
+  await prisma.rental.delete({
+    where: { id: Number(req.params.id) },
+  });
+  res.json({ success: true });
+});
+
 // --- News ---
 app.get('/api/news', async (req, res) => {
   const { category } = req.query;

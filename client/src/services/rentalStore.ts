@@ -1,54 +1,35 @@
+import { api } from './api';
 import type { RentalBooking } from '../types';
 
-const STORAGE_KEY = 'art-center-rentals';
-
-export function getBookings(): RentalBooking[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
+export async function getBookings(): Promise<RentalBooking[]> {
+  return api.getRentals();
 }
 
-export function addBooking(booking: Omit<RentalBooking, 'id' | 'createdAt'>): RentalBooking {
-  const bookings = getBookings();
-  const newBooking: RentalBooking = {
-    ...booking,
-    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-    createdAt: new Date().toISOString(),
-  };
-  bookings.push(newBooking);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(bookings));
-  return newBooking;
+export async function addBooking(
+  booking: Omit<RentalBooking, 'id' | 'createdAt'>,
+): Promise<RentalBooking> {
+  return api.submitRental(booking as Parameters<typeof api.submitRental>[0]);
 }
 
-export function updateBookingStatus(id: string, status: RentalBooking['status']): void {
-  const bookings = getBookings();
-  const idx = bookings.findIndex((b) => b.id === id);
-  if (idx !== -1) {
-    bookings[idx].status = status;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(bookings));
-  }
+export async function updateBookingStatus(id: number, status: string): Promise<void> {
+  await api.updateRentalStatus(id, status);
 }
 
-export function deleteBooking(id: string): void {
-  const bookings = getBookings().filter((b) => b.id !== id);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(bookings));
+export async function deleteBooking(id: number): Promise<void> {
+  await api.deleteRental(id);
 }
 
 /** Check if a given space has any booking overlapping with [weekStart, weekEnd] */
 export function getSpaceStatusForWeek(
+  bookings: RentalBooking[],
   spaceName: string,
   weekStart: Date,
   weekEnd: Date,
-): 'available' | 'reviewing' | 'confirmed' {
-  const bookings = getBookings();
+): string {
   for (const b of bookings) {
     if (b.spaceName !== spaceName) continue;
     const bStart = new Date(b.startDate);
     const bEnd = new Date(b.endDate);
-    // Check overlap: booking overlaps week if bStart <= weekEnd && bEnd >= weekStart
     if (bStart <= weekEnd && bEnd >= weekStart) {
       return b.status;
     }

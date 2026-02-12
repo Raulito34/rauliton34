@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getSpaceStatusForWeek } from '../../services/rentalStore';
+import { getBookings, getSpaceStatusForWeek } from '../../services/rentalStore';
+import type { RentalBooking } from '../../types';
 
 const spaces = [
   { key: 'B1F 제1전시관', floor: 'B1F', name: '제1전시관', area: '200㎡' },
@@ -71,12 +72,26 @@ function generateWeeks(baseMonday: Date, count: number): WeekRange[] {
   return weeks;
 }
 
-type CellStatus = 'available' | 'reviewing' | 'confirmed';
-
 interface SelectedCell {
   weekIdx: number;
   spaceKey: string;
 }
+
+const statusLabelMap: Record<string, string> = {
+  available: '선택',
+  reviewing: '심사중',
+  pending: '심사중',
+  confirmed: '대관완료',
+  approved: '대관완료',
+};
+
+const statusColorMap: Record<string, string> = {
+  available: 'text-blue-600',
+  reviewing: 'text-orange-500',
+  pending: 'text-orange-500',
+  confirmed: 'text-gray-400',
+  approved: 'text-gray-400',
+};
 
 export default function StatusPage() {
   const navigate = useNavigate();
@@ -87,20 +102,30 @@ export default function StatusPage() {
   const [pageOffset, setPageOffset] = useState(0);
   const [selected, setSelected] = useState<SelectedCell[]>([]);
   const [detailSpace, setDetailSpace] = useState<string | null>(null);
+  const [bookings, setBookings] = useState<RentalBooking[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    getBookings()
+      .then(setBookings)
+      .catch(() => setBookings([]))
+      .finally(() => setLoading(false));
+  }, []);
 
   const weeks = useMemo(
     () => generateWeeks(addDays(baseMonday, pageOffset * 7 * WEEKS_PER_PAGE), WEEKS_PER_PAGE),
     [pageOffset],
   );
 
-  // Build status grid
+  // Build status grid from server data
   const statusGrid = useMemo(() => {
-    const grid: Record<string, CellStatus[]> = {};
+    const grid: Record<string, string[]> = {};
     for (const sp of spaces) {
-      grid[sp.key] = weeks.map((w) => getSpaceStatusForWeek(sp.key, w.start, w.end));
+      grid[sp.key] = weeks.map((w) => getSpaceStatusForWeek(bookings, sp.key, w.start, w.end));
     }
     return grid;
-  }, [weeks]);
+  }, [weeks, bookings]);
 
   const toggleSelect = (weekIdx: number, spaceKey: string) => {
     const exists = selected.find((s) => s.weekIdx === weekIdx && s.spaceKey === spaceKey);
@@ -117,7 +142,6 @@ export default function StatusPage() {
   const handleApply = () => {
     if (selected.length === 0) return;
 
-    // Find the earliest start and latest end from selected weeks
     let earliest = weeks[selected[0].weekIdx].start;
     let latest = weeks[selected[0].weekIdx].end;
     const spaceNames = new Set<string>();
@@ -138,27 +162,7 @@ export default function StatusPage() {
     navigate(`/rental/apply?${params.toString()}`);
   };
 
-  const statusLabel = (status: CellStatus) => {
-    switch (status) {
-      case 'available':
-        return '선택';
-      case 'reviewing':
-        return '심사중';
-      case 'confirmed':
-        return '대관완료';
-    }
-  };
-
-  const statusColors = (status: CellStatus) => {
-    switch (status) {
-      case 'available':
-        return 'text-blue-600';
-      case 'reviewing':
-        return 'text-orange-500';
-      case 'confirmed':
-        return 'text-gray-400';
-    }
-  };
+  const isAvailable = (status: string) => status === 'available';
 
   return (
     <div>
@@ -218,99 +222,104 @@ export default function StatusPage() {
             </button>
           </div>
 
-          {/* Calendar Table */}
-          <div className="overflow-x-auto border border-gray-200 rounded-lg">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-primary text-white">
-                  <th className="py-3 px-4 text-left font-medium w-[260px] min-w-[220px]">기간</th>
-                  {spaces.map((sp) => (
-                    <th key={sp.key} className="py-3 px-3 text-center font-medium min-w-[120px]">
-                      <div>{sp.floor}</div>
-                      <div className="text-xs font-normal text-gray-300">{sp.name}</div>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {weeks.map((week, wi) => (
-                  <tr key={wi} className={wi % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                    <td className="py-3 px-4 text-gray-700 font-medium text-xs whitespace-nowrap border-r border-gray-100">
-                      {week.label}
-                    </td>
-                    {spaces.map((sp) => {
-                      const status = statusGrid[sp.key][wi];
-                      const checked = isSelected(wi, sp.key);
-                      return (
-                        <td key={sp.key} className="py-3 px-3 text-center border-r border-gray-100 last:border-r-0">
-                          {status === 'available' ? (
-                            <label className="cursor-pointer inline-flex items-center gap-1.5 select-none">
-                              <input
-                                type="checkbox"
-                                checked={checked}
-                                onChange={() => toggleSelect(wi, sp.key)}
-                                className="w-4 h-4 accent-blue-600 cursor-pointer"
-                              />
-                              <span className="text-blue-600 text-xs font-medium">{statusLabel(status)}</span>
-                            </label>
-                          ) : (
-                            <span className={`text-xs font-medium ${statusColors(status)}`}>
-                              {statusLabel(status)}
-                            </span>
-                          )}
+          {loading ? (
+            <div className="text-center py-20 text-gray-400">대관 현황을 불러오는 중...</div>
+          ) : (
+            <>
+              {/* Calendar Table */}
+              <div className="overflow-x-auto border border-gray-200 rounded-lg">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-primary text-white">
+                      <th className="py-3 px-4 text-left font-medium w-[260px] min-w-[220px]">기간</th>
+                      {spaces.map((sp) => (
+                        <th key={sp.key} className="py-3 px-3 text-center font-medium min-w-[120px]">
+                          <div>{sp.floor}</div>
+                          <div className="text-xs font-normal text-gray-300">{sp.name}</div>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {weeks.map((week, wi) => (
+                      <tr key={wi} className={wi % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                        <td className="py-3 px-4 text-gray-700 font-medium text-xs whitespace-nowrap border-r border-gray-100">
+                          {week.label}
                         </td>
-                      );
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                        {spaces.map((sp) => {
+                          const status = statusGrid[sp.key][wi];
+                          const checked = isSelected(wi, sp.key);
+                          return (
+                            <td key={sp.key} className="py-3 px-3 text-center border-r border-gray-100 last:border-r-0">
+                              {isAvailable(status) ? (
+                                <label className="cursor-pointer inline-flex items-center gap-1.5 select-none">
+                                  <input
+                                    type="checkbox"
+                                    checked={checked}
+                                    onChange={() => toggleSelect(wi, sp.key)}
+                                    className="w-4 h-4 accent-blue-600 cursor-pointer"
+                                  />
+                                  <span className="text-blue-600 text-xs font-medium">선택</span>
+                                </label>
+                              ) : (
+                                <span className={`text-xs font-medium ${statusColorMap[status] || 'text-gray-400'}`}>
+                                  {statusLabelMap[status] || status}
+                                </span>
+                              )}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
 
-          {/* Selected Summary & Apply */}
-          {selected.length > 0 && (
-            <div className="mt-8 border border-accent/30 rounded-lg bg-accent/5 p-6">
-              <h3 className="text-lg font-bold text-primary mb-4">선택 내역</h3>
-              <div className="space-y-3 mb-6">
-                {(() => {
-                  // Group by space
-                  const grouped: Record<string, number[]> = {};
-                  for (const s of selected) {
-                    if (!grouped[s.spaceKey]) grouped[s.spaceKey] = [];
-                    grouped[s.spaceKey].push(s.weekIdx);
-                  }
-                  return Object.entries(grouped).map(([spaceKey, weekIdxs]) => {
-                    const sortedWeeks = weekIdxs.sort((a, b) => a - b);
-                    const earliest = weeks[sortedWeeks[0]].start;
-                    const latest = weeks[sortedWeeks[sortedWeeks.length - 1]].end;
-                    return (
-                      <div key={spaceKey} className="flex flex-wrap items-center gap-4 bg-white rounded p-4 border border-gray-200">
-                        <div className="flex-1 min-w-0">
-                          <span className="font-medium text-primary">{spaceKey}</span>
-                          <span className="text-sm text-gray-500 ml-3">
-                            {formatDate(earliest)} ~ {formatDate(latest)} ({sortedWeeks.length}주)
-                          </span>
-                        </div>
-                        <button
-                          onClick={() => setDetailSpace(spaceKey)}
-                          className="text-xs text-accent hover:text-accent-light border border-accent/40 px-3 py-1.5 rounded transition-colors"
-                        >
-                          전시장 정보
-                        </button>
-                      </div>
-                    );
-                  });
-                })()}
-              </div>
-              <div className="text-center">
-                <button
-                  onClick={handleApply}
-                  className="bg-accent text-white px-12 py-3 text-sm font-medium hover:bg-accent-light transition-colors rounded"
-                >
-                  대관 신청하기
-                </button>
-              </div>
-            </div>
+              {/* Selected Summary & Apply */}
+              {selected.length > 0 && (
+                <div className="mt-8 border border-accent/30 rounded-lg bg-accent/5 p-6">
+                  <h3 className="text-lg font-bold text-primary mb-4">선택 내역</h3>
+                  <div className="space-y-3 mb-6">
+                    {(() => {
+                      const grouped: Record<string, number[]> = {};
+                      for (const s of selected) {
+                        if (!grouped[s.spaceKey]) grouped[s.spaceKey] = [];
+                        grouped[s.spaceKey].push(s.weekIdx);
+                      }
+                      return Object.entries(grouped).map(([spaceKey, weekIdxs]) => {
+                        const sortedWeeks = weekIdxs.sort((a, b) => a - b);
+                        const earliest = weeks[sortedWeeks[0]].start;
+                        const latest = weeks[sortedWeeks[sortedWeeks.length - 1]].end;
+                        return (
+                          <div key={spaceKey} className="flex flex-wrap items-center gap-4 bg-white rounded p-4 border border-gray-200">
+                            <div className="flex-1 min-w-0">
+                              <span className="font-medium text-primary">{spaceKey}</span>
+                              <span className="text-sm text-gray-500 ml-3">
+                                {formatDate(earliest)} ~ {formatDate(latest)} ({sortedWeeks.length}주)
+                              </span>
+                            </div>
+                            <button
+                              onClick={() => setDetailSpace(spaceKey)}
+                              className="text-xs text-accent hover:text-accent-light border border-accent/40 px-3 py-1.5 rounded transition-colors"
+                            >
+                              전시장 정보
+                            </button>
+                          </div>
+                        );
+                      });
+                    })()}
+                  </div>
+                  <div className="text-center">
+                    <button
+                      onClick={handleApply}
+                      className="bg-accent text-white px-12 py-3 text-sm font-medium hover:bg-accent-light transition-colors rounded"
+                    >
+                      대관 신청하기
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
@@ -334,7 +343,6 @@ export default function StatusPage() {
               </button>
             </div>
             <div className="p-6">
-              {/* Floor plan placeholder */}
               <div className="bg-gray-100 rounded-lg p-8 mb-6 flex items-center justify-center">
                 <div className="text-center">
                   <svg className="w-16 h-16 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
