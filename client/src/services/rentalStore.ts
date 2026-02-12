@@ -5,6 +5,11 @@ export async function getBookings(): Promise<RentalBooking[]> {
   return api.getRentals();
 }
 
+/** Public: fetch only booking statuses (no personal info) for availability calendar */
+export async function getBookingStatuses(): Promise<Pick<RentalBooking, 'id' | 'spaceName' | 'startDate' | 'endDate' | 'status'>[]> {
+  return api.getRentalStatuses();
+}
+
 export async function addBooking(
   booking: Omit<RentalBooking, 'id' | 'createdAt'>,
 ): Promise<RentalBooking> {
@@ -21,7 +26,7 @@ export async function deleteBooking(id: number): Promise<void> {
 
 /** Check if a given space has any booking overlapping with [weekStart, weekEnd] */
 export function getSpaceStatusForWeek(
-  bookings: RentalBooking[],
+  bookings: Pick<RentalBooking, 'spaceName' | 'startDate' | 'endDate' | 'status'>[],
   spaceName: string,
   weekStart: Date,
   weekEnd: Date,

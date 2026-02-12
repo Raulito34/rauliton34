@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getBookings, getSpaceStatusForWeek } from '../../services/rentalStore';
+import { getBookingStatuses, getSpaceStatusForWeek } from '../../services/rentalStore';
 import type { RentalBooking } from '../../types';
 
 const spaces = [
@@ -102,12 +102,12 @@ export default function StatusPage() {
   const [pageOffset, setPageOffset] = useState(0);
   const [selected, setSelected] = useState<SelectedCell[]>([]);
   const [detailSpace, setDetailSpace] = useState<string | null>(null);
-  const [bookings, setBookings] = useState<RentalBooking[]>([]);
+  const [bookings, setBookings] = useState<Pick<RentalBooking, 'id' | 'spaceName' | 'startDate' | 'endDate' | 'status'>[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-    getBookings()
+    getBookingStatuses()
       .then(setBookings)
       .catch(() => setBookings([]))
       .finally(() => setLoading(false));

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getBookings, updateBookingStatus, deleteBooking } from '../../services/rentalStore';
+import { api, getAdminCode, setAdminCode, clearAdminCode } from '../../services/api';
 import type { RentalBooking } from '../../types';
 
 function formatDate(iso: string): string {
@@ -41,23 +42,55 @@ const isReviewingStatus = (s: string) => s === 'pending' || s === 'reviewing';
 const isConfirmedStatus = (s: string) => s === 'approved' || s === 'confirmed';
 
 export default function RentalListPage() {
+  const [authenticated, setAuthenticated] = useState(!!getAdminCode());
+  const [codeInput, setCodeInput] = useState('');
+  const [codeError, setCodeError] = useState('');
+  const [verifying, setVerifying] = useState(false);
+
   const [bookings, setBookings] = useState<RentalBooking[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [filterStatus, setFilterStatus] = useState<'all' | 'reviewing' | 'confirmed'>('all');
+
+  const handleVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setVerifying(true);
+    setCodeError('');
+    try {
+      const res = await api.verifyAdmin(codeInput);
+      if (res.ok) {
+        setAdminCode(codeInput);
+        setAuthenticated(true);
+      }
+    } catch {
+      setCodeError('관리자 코드가 올바르지 않습니다.');
+    } finally {
+      setVerifying(false);
+    }
+  };
+
+  const handleLogout = () => {
+    clearAdminCode();
+    setAuthenticated(false);
+    setBookings([]);
+    setCodeInput('');
+  };
 
   const refresh = async () => {
     try {
       const data = await getBookings();
       setBookings(data);
     } catch {
+      clearAdminCode();
+      setAuthenticated(false);
       setBookings([]);
     }
   };
 
   useEffect(() => {
+    if (!authenticated) return;
     refresh().finally(() => setLoading(false));
-  }, []);
+  }, [authenticated]);
 
   const handleStatusChange = async (id: number, status: string) => {
     await updateBookingStatus(id, status);
@@ -85,6 +118,50 @@ export default function RentalListPage() {
 
   const selectedBooking = bookings.find((b) => b.id === selectedId);
 
+  if (!authenticated) {
+    return (
+      <div>
+        <section className="bg-primary text-white py-20">
+          <div className="max-w-7xl mx-auto px-4 text-center">
+            <h1 className="text-4xl font-bold mb-2">신청내역</h1>
+            <p className="text-gray-400 text-sm">Rental Applications</p>
+          </div>
+        </section>
+        <section className="py-20 bg-white">
+          <div className="max-w-sm mx-auto text-center">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold text-primary mb-2">관리자 인증</h2>
+            <p className="text-gray-500 text-sm mb-8">신청내역 조회를 위해 관리자 코드를 입력해주세요.</p>
+            <form onSubmit={handleVerify} className="space-y-4">
+              <input
+                type="password"
+                value={codeInput}
+                onChange={(e) => setCodeInput(e.target.value)}
+                placeholder="관리자 코드 입력"
+                required
+                className="w-full border border-gray-300 px-4 py-3 text-sm text-center tracking-widest focus:outline-none focus:border-accent"
+              />
+              {codeError && (
+                <p className="text-red-500 text-sm">{codeError}</p>
+              )}
+              <button
+                type="submit"
+                disabled={verifying}
+                className="w-full bg-accent text-white py-3 text-sm font-medium hover:bg-accent-light transition-colors disabled:opacity-50"
+              >
+                {verifying ? '확인 중...' : '확인'}
+              </button>
+            </form>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
   return (
     <div>
       {/* Hero */}
@@ -97,6 +174,16 @@ export default function RentalListPage() {
 
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4">
+          {/* Logout button */}
+          <div className="flex justify-end mb-4">
+            <button
+              onClick={handleLogout}
+              className="text-xs text-gray-400 hover:text-gray-600 border border-gray-200 px-3 py-1.5 rounded transition-colors"
+            >
+              관리자 로그아웃
+            </button>
+          </div>
+
           {loading ? (
             <div className="text-center py-20 text-gray-400">신청 내역을 불러오는 중...</div>
           ) : (

@@ -14,6 +14,26 @@ const allowedOrigins = process.env.CLIENT_URL
 app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 
+// --- Admin auth middleware ---
+const ADMIN_CODE = process.env.ADMIN_CODE || 'admin1234';
+
+function requireAdmin(req: express.Request, res: express.Response, next: express.NextFunction) {
+  const code = req.headers['x-admin-code'];
+  if (code !== ADMIN_CODE) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  next();
+}
+
+// Admin code verification endpoint
+app.post('/api/admin/verify', (req, res) => {
+  const { code } = req.body;
+  if (code === ADMIN_CODE) {
+    return res.json({ ok: true });
+  }
+  res.status(401).json({ ok: false, error: 'Invalid code' });
+});
+
 // --- Exhibitions ---
 app.get('/api/exhibitions', async (req, res) => {
   const { status } = req.query;
@@ -70,14 +90,24 @@ app.post('/api/rentals', async (req, res) => {
   res.status(201).json(rental);
 });
 
-app.get('/api/rentals', async (_req, res) => {
+// Public: only booking status for availability calendar (no personal info)
+app.get('/api/rentals/status', async (_req, res) => {
+  const rentals = await prisma.rental.findMany({
+    select: { id: true, spaceName: true, startDate: true, endDate: true, status: true },
+    orderBy: { createdAt: 'desc' },
+  });
+  res.json(rentals);
+});
+
+// Admin: full rental details
+app.get('/api/rentals', requireAdmin, async (_req, res) => {
   const rentals = await prisma.rental.findMany({
     orderBy: { createdAt: 'desc' },
   });
   res.json(rentals);
 });
 
-app.patch('/api/rentals/:id', async (req, res) => {
+app.patch('/api/rentals/:id', requireAdmin, async (req, res) => {
   const { status } = req.body;
   const rental = await prisma.rental.update({
     where: { id: Number(req.params.id) },
@@ -86,7 +116,7 @@ app.patch('/api/rentals/:id', async (req, res) => {
   res.json(rental);
 });
 
-app.delete('/api/rentals/:id', async (req, res) => {
+app.delete('/api/rentals/:id', requireAdmin, async (req, res) => {
   await prisma.rental.delete({
     where: { id: Number(req.params.id) },
   });
