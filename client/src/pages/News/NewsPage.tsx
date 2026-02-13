@@ -98,7 +98,7 @@ export default function NewsPage() {
             {[
               { key: 'all', label: '전체' },
               { key: 'notice', label: '공지사항' },
-              { key: 'news', label: '아트센터 소식' },
+              { key: 'news', label: '선아트센터 소식' },
             ].map((tab) => (
               <button
                 key={tab.key}
@@ -139,7 +139,7 @@ export default function NewsPage() {
                     <select name="category" value={form.category} onChange={handleChange}
                       className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-accent">
                       <option value="notice">공지사항</option>
-                      <option value="news">아트센터 소식</option>
+                      <option value="news">선아트센터 소식</option>
                     </select>
                   </div>
                   <div>

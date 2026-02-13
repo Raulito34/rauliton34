@@ -169,8 +169,8 @@ export default function StatusPage() {
       {/* Hero */}
       <section className="bg-primary text-white py-20">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-4xl font-bold mb-2">대관현황</h1>
-          <p className="text-gray-400 text-sm">Rental Availability</p>
+          <h1 className="text-4xl font-bold mb-2">대관신청</h1>
+          <p className="text-gray-400 text-sm">Rental Application</p>
         </div>
       </section>
 

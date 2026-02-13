@@ -15,7 +15,7 @@ export default function ArchitecturePage() {
             <div>
               <img
                 src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800"
-                alt="아트센터 외관"
+                alt="선아트센터 외관"
                 className="w-full h-80 object-cover"
               />
             </div>
@@ -24,7 +24,7 @@ export default function ArchitecturePage() {
                 전통과 현대의 조화
               </h2>
               <p className="text-gray-600 leading-relaxed mb-4">
-                아트센터는 현대 건축의 미학과 기능성을 결합한 설계로,
+                선아트센터는 현대 건축의 미학과 기능성을 결합한 설계로,
                 다목적 전시 공간의 최적화를 추구합니다. 지하 1층부터
                 지상 4층까지 총 5개의 전시 공간은 각기 다른 성격과
                 분위기를 가지고 있습니다.

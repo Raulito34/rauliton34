@@ -21,7 +21,7 @@ export default function AboutPage() {
                 인사말
               </h3>
               <p className="text-sm text-gray-600">
-                아트센터의 비전과 철학을 소개합니다.
+                선아트센터의 비전과 철학을 소개합니다.
               </p>
             </Link>
             <Link
@@ -32,7 +32,7 @@ export default function AboutPage() {
                 건축 / 공간
               </h3>
               <p className="text-sm text-gray-600">
-                아트센터의 건축 설계와 공간 구성을 확인하세요.
+                선아트센터의 건축 설계와 공간 구성을 확인하세요.
               </p>
             </Link>
             <Link
@@ -43,7 +43,7 @@ export default function AboutPage() {
                 오시는 길
               </h3>
               <p className="text-sm text-gray-600">
-                아트센터 위치와 교통편 안내입니다.
+                선아트센터 위치와 교통편 안내입니다.
               </p>
             </Link>
           </div>
