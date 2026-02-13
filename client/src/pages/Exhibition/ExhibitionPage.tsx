@@ -10,9 +10,12 @@ const tabs = [
   { key: 'past', label: '지난전시' },
 ];
 
-const emptyForm = {
+const emptyForm: {
+  title: string; artist: string; description: string; startDate: string; endDate: string;
+  floor: string; imageUrl: string; status: 'current' | 'upcoming' | 'past'; details: string;
+} = {
   title: '', artist: '', description: '', startDate: '', endDate: '',
-  floor: '', imageUrl: '', status: 'upcoming' as const, details: '',
+  floor: '', imageUrl: '', status: 'upcoming', details: '',
 };
 
 export default function ExhibitionPage() {

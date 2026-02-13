@@ -3,7 +3,9 @@ import { useSearchParams } from 'react-router-dom';
 import { api, getAdminCode } from '../../services/api';
 import type { NewsItem } from '../../types';
 
-const emptyForm = { title: '', content: '', category: 'notice' as const };
+const emptyForm: { title: string; content: string; category: 'notice' | 'news' } = {
+  title: '', content: '', category: 'notice',
+};
 
 export default function NewsPage() {
   const [searchParams] = useSearchParams();
