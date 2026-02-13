@@ -1,0 +1,20 @@
+{
+  "name": "art-center-website",
+  "version": "1.0.0",
+  "description": "Art Center Website - Exhibition & Rental Management",
+  "scripts": {
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "start": "cd server && npm run start",
+    "build": "cd client && npm run build",
+    "postinstall": "cd server && npm install",
+    "install:all": "cd client && npm install && cd ../server && npm install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://local_proxy@127.0.0.1:16554/git/Raulito34/rauliton34"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

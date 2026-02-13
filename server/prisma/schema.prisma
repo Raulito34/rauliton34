@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Exhibition {
+  id          Int      @id @default(autoincrement())
+  title       String
+  artist      String
+  description String
+  startDate   String
+  endDate     String
+  floor       String
+  imageUrl    String
+  status      String   @default("upcoming") // current, upcoming, past
+  details     String   @default("")
+  createdAt   DateTime @default(now())
+}
+
+model Space {
+  id          Int      @id @default(autoincrement())
+  name        String
+  floor       String   @unique
+  floorLabel  String
+  area        Int
+  height      Float
+  capacity    Int
+  description String
+  details     String   @default("")
+  imageUrl    String
+  features    String   // JSON array stored as string
+  createdAt   DateTime @default(now())
+}
+
+model Rental {
+  id             Int      @id @default(autoincrement())
+  spaceName      String
+  applicantName  String
+  organization   String   @default("")
+  email          String
+  phone          String
+  startDate      String
+  endDate        String
+  purpose        String
+  message        String   @default("")
+  status         String   @default("pending") // pending, approved, rejected
+  createdAt      DateTime @default(now())
+}
+
+model RentalPricing {
+  id        Int    @id @default(autoincrement())
+  spaceName String
+  floor     String
+  area      String
+  week1     Int
+  week2     Int
+  week3     Int
+  week4     Int
+}
+
+model News {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  category  String   // notice, news
+  createdAt DateTime @default(now())
+}
+
+model Contact {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String   @default("")
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+}
