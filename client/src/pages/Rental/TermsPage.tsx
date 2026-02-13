@@ -14,7 +14,7 @@ export default function TermsPage() {
             <div>
               <h2 className="text-lg font-bold text-primary">제1조 (목적)</h2>
               <p>
-                본 규약은 아트센터(이하 "센터")의 전시 공간 대관에 관한 제반 사항을
+                본 규약은 선아트센터(이하 "센터")의 전시 공간 대관에 관한 제반 사항을
                 규정함을 목적으로 합니다.
               </p>
             </div>

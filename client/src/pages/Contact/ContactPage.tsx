@@ -72,12 +72,12 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-primary mb-1">이메일</h3>
-                  <p className="text-sm text-gray-600">info@artcenter.com</p>
+                  <p className="text-sm text-gray-600">info@sunartcenter.com</p>
                 </div>
                 <div>
                   <h3 className="font-semibold text-primary mb-1">주소</h3>
                   <p className="text-sm text-gray-600">
-                    서울특별시 종로구 인사동길 00<br />아트센터
+                    서울특별시 종로구 인사동길 00<br />선아트센터
                   </p>
                 </div>
                 <div>

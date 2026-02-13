@@ -5,7 +5,7 @@ const steps = [
     num: '01',
     title: '대관 문의',
     desc: '전화 또는 이메일로 희망 공간, 일정, 전시 내용에 대해 사전 상담을 진행합니다.',
-    detail: '02-000-0000 / info@artcenter.com',
+    detail: '02-000-0000 / info@sunartcenter.com',
   },
   {
     num: '02',
@@ -34,7 +34,7 @@ const steps = [
   {
     num: '06',
     title: '전시 진행',
-    desc: '작품 반입, 설치, 전시 운영, 철수까지 아트센터의 지원을 받으며 진행합니다.',
+    desc: '작품 반입, 설치, 전시 운영, 철수까지 선아트센터의 지원을 받으며 진행합니다.',
     detail: '기술 지원 포함',
   },
 ];
@@ -52,7 +52,7 @@ export default function ProcedurePage() {
       <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4">
           <p className="text-center text-gray-600 mb-12">
-            아트센터 대관은 아래 절차에 따라 진행됩니다.
+            선아트센터 대관은 아래 절차에 따라 진행됩니다.
           </p>
 
           <div className="space-y-0">

@@ -18,7 +18,7 @@ export default function LocationPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
               <p className="text-sm">지도 영역 (Google Maps / Kakao Map API 연동)</p>
-              <p className="text-xs mt-1">서울시 종로구 인사동길 00 아트센터</p>
+              <p className="text-xs mt-1">서울시 종로구 인사동길 00 선아트센터</p>
             </div>
           </div>
 
@@ -30,7 +30,7 @@ export default function LocationPage() {
                 <div>
                   <h3 className="font-semibold text-primary mb-2">주소</h3>
                   <p className="text-sm text-gray-600">
-                    서울특별시 종로구 인사동길 00 아트센터<br />
+                    서울특별시 종로구 인사동길 00 선아트센터<br />
                     (우편번호: 03148)
                   </p>
                 </div>
@@ -76,7 +76,7 @@ export default function LocationPage() {
                   <p className="text-sm text-gray-600">
                     전화: 02-000-0000<br />
                     팩스: 02-000-0001<br />
-                    이메일: info@artcenter.com
+                    이메일: info@sunartcenter.com
                   </p>
                 </div>
                 <div>

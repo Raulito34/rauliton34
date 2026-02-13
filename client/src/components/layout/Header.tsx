@@ -38,8 +38,7 @@ const navItems = [
       { label: '대관절차', path: '/rental/procedure' },
       { label: '대관료', path: '/rental/pricing' },
       { label: '대관규약', path: '/rental/terms' },
-      { label: '대관신청', path: '/rental/apply' },
-      { label: '대관현황', path: '/rental/status' },
+      { label: '대관신청', path: '/rental/status' },
       { label: '신청내역', path: '/rental/list' },
     ],
   },
@@ -48,7 +47,7 @@ const navItems = [
     path: '/news',
     sub: [
       { label: '공지사항', path: '/news?category=notice' },
-      { label: '아트센터 소식', path: '/news?category=news' },
+      { label: '선아트센터 소식', path: '/news?category=news' },
     ],
   },
   { label: '문의', path: '/contact', sub: [] },
@@ -57,51 +56,56 @@ const navItems = [
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const location = useLocation();
 
   const isActive = (path: string) => location.pathname.startsWith(path);
 
+  const toggleMobileExpand = (path: string) => {
+    setMobileExpanded(mobileExpanded === path ? null : path);
+  };
+
   return (
-    <header className="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between h-20">
+    <header className="bg-white/95 backdrop-blur-sm fixed top-0 left-0 right-0 z-50 border-b border-gray-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-sm flex items-center justify-center">
-              <span className="text-white font-bold text-lg">A</span>
-            </div>
-            <div>
-              <span className="text-xl font-bold text-primary tracking-tight">ART CENTER</span>
-              <span className="block text-xs text-gray-500 tracking-widest">아트센터</span>
-            </div>
+          <Link
+            to="/"
+            className="flex items-center gap-2"
+            onClick={() => setMobileOpen(false)}
+          >
+            <span className="font-logo text-[17px] sm:text-lg font-semibold tracking-tight text-primary">
+              SUN ART CENTER
+            </span>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center">
             {navItems.map((item) => (
               <div
                 key={item.path}
-                className="relative group"
+                className="relative"
                 onMouseEnter={() => setActiveDropdown(item.path)}
                 onMouseLeave={() => setActiveDropdown(null)}
               >
                 <Link
                   to={item.path}
-                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  className={`px-4 py-5 text-[13px] font-medium tracking-wide transition-colors ${
                     isActive(item.path)
-                      ? 'text-accent'
-                      : 'text-gray-700 hover:text-accent'
+                      ? 'text-primary'
+                      : 'text-gray-400 hover:text-primary'
                   }`}
                 >
                   {item.label}
                 </Link>
                 {item.sub.length > 0 && activeDropdown === item.path && (
-                  <div className="absolute top-full left-0 bg-white shadow-lg rounded-b-lg min-w-[180px] py-2 border-t-2 border-accent">
+                  <div className="absolute top-full left-0 bg-white shadow-lg min-w-[180px] py-2 border-t border-primary">
                     {item.sub.map((sub) => (
                       <Link
                         key={sub.path}
                         to={sub.path}
-                        className="block px-4 py-2 text-sm text-gray-600 hover:text-accent hover:bg-gray-50 transition-colors"
+                        className="block px-5 py-2 text-[13px] text-gray-500 hover:text-primary hover:bg-gray-50 transition-colors"
                       >
                         {sub.label}
                       </Link>
@@ -114,15 +118,15 @@ export default function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden p-2 text-gray-700"
+            className="lg:hidden p-2 text-gray-600"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="메뉴 열기"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {mobileOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
               ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
               )}
             </svg>
           </button>
@@ -130,26 +134,45 @@ export default function Header() {
 
         {/* Mobile Nav */}
         {mobileOpen && (
-          <nav className="lg:hidden border-t py-4">
+          <nav className="lg:hidden border-t border-gray-100 py-2 max-h-[calc(100vh-4rem)] overflow-y-auto">
             {navItems.map((item) => (
-              <div key={item.path} className="mb-2">
-                <Link
-                  to={item.path}
-                  className="block px-4 py-2 text-sm font-medium text-gray-700 hover:text-accent"
-                  onClick={() => item.sub.length === 0 && setMobileOpen(false)}
-                >
-                  {item.label}
-                </Link>
-                {item.sub.map((sub) => (
+              <div key={item.path}>
+                {item.sub.length > 0 ? (
+                  <button
+                    onClick={() => toggleMobileExpand(item.path)}
+                    className="w-full flex items-center justify-between px-4 py-2.5 text-[13px] font-medium text-gray-700"
+                  >
+                    {item.label}
+                    <svg
+                      className={`w-3.5 h-3.5 text-gray-400 transition-transform ${mobileExpanded === item.path ? 'rotate-180' : ''}`}
+                      fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                ) : (
                   <Link
-                    key={sub.path}
-                    to={sub.path}
-                    className="block px-8 py-1.5 text-sm text-gray-500 hover:text-accent"
+                    to={item.path}
+                    className="block px-4 py-2.5 text-[13px] font-medium text-gray-700"
                     onClick={() => setMobileOpen(false)}
                   >
-                    {sub.label}
+                    {item.label}
                   </Link>
-                ))}
+                )}
+                {item.sub.length > 0 && mobileExpanded === item.path && (
+                  <div className="bg-gray-50 py-1">
+                    {item.sub.map((sub) => (
+                      <Link
+                        key={sub.path}
+                        to={sub.path}
+                        className="block px-8 py-2 text-xs text-gray-500 hover:text-primary"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        {sub.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
           </nav>
