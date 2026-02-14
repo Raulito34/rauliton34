@@ -4,12 +4,10 @@
   --font-sans: 'Inter', 'Noto Sans KR', system-ui, -apple-system, sans-serif;
   --font-display: 'Inter', 'Noto Sans KR', system-ui, sans-serif;
   --color-primary: #000000;
-  --color-primary-black: #000000;
   --color-secondary: #0a0a0a;
   --color-accent: #000000;
   --color-accent-light: #333333;
-  --color-light: #f2f2f2;
-  --color-neutral-light: #f2f2f2;
+  --color-light: #fafafa;
   --color-dark: #0a0a0a;
 }
 
@@ -19,6 +17,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
   background-color: #ffffff;
   color: #000000;
 }
@@ -33,15 +32,11 @@ body {
   width: 100%;
 }
 
-.catalog-border {
-  border-bottom: 1px solid #000000;
+.img-frame {
+  padding: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.card-hover-transition {
-  transition: background-color 0.3s ease;
-}
-
-.blur-backdrop {
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
