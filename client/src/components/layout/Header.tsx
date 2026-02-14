@@ -24,11 +24,11 @@ const navItems = [
     label: '공간안내',
     path: '/spaces',
     sub: [
-      { label: 'B1F 제1전시관', path: '/spaces/b1f' },
-      { label: '1F 제2전시관', path: '/spaces/1f' },
-      { label: '2F 제3전시관', path: '/spaces/2f' },
-      { label: '3F 제4전시관', path: '/spaces/3f' },
-      { label: '4F 다목적홀', path: '/spaces/4f' },
+      { label: '1F 제1전시관', path: '/spaces/1f' },
+      { label: '2F 제2전시관', path: '/spaces/2f' },
+      { label: '3F 제3전시관', path: '/spaces/3f' },
+      { label: '4F 제4전시관', path: '/spaces/4f' },
+      { label: 'B1F 제5전시관', path: '/spaces/b1f' },
     ],
   },
   {
@@ -68,13 +68,14 @@ export default function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md">
       <div className="px-6 py-6 flex justify-between items-end">
-        {/* Logo — SUN ART CENTER in Google Sans Serif (Inter) */}
+        {/* Logo — SUN ART CENTER in Jost (Futura-style, no bold) */}
         <Link
           to="/"
-          className="text-2xl font-black tracking-tighter uppercase leading-none"
+          className="text-2xl uppercase leading-none"
+          style={{ fontFamily: "'Jost', sans-serif", fontWeight: 400, letterSpacing: '0.08em' }}
           onClick={() => setMobileOpen(false)}
         >
-          SUN ART<span className="font-light"> CENTER</span>
+          SUN ART CENTER
         </Link>
 
         {/* Desktop Nav */}

@@ -23,11 +23,11 @@ export default function TermsPage() {
               <h2 className="text-lg font-bold text-primary">제2조 (대관 대상)</h2>
               <p>센터의 대관 대상 공간은 다음과 같습니다:</p>
               <ul className="list-disc list-inside mt-2 space-y-1">
-                <li>B1F 제1전시관 (미디어아트/설치미술)</li>
-                <li>1F 제2전시관 (기획전시/회화)</li>
-                <li>2F 제3전시관 (개인전/그룹전)</li>
-                <li>3F 제4전시관 (사진/공예)</li>
-                <li>4F 다목적홀 (세미나/공연/특별전)</li>
+                <li>1F 제1전시관 (기획전시/회화)</li>
+                <li>2F 제2전시관 (개인전/그룹전)</li>
+                <li>3F 제3전시관 (사진/공예)</li>
+                <li>4F 제4전시관 (세미나/공연/특별전)</li>
+                <li>B1F 제5전시관 (미디어아트/설치미술)</li>
               </ul>
             </div>
 

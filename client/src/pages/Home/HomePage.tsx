@@ -8,7 +8,7 @@ const currentExhibitions = [
     id: 1,
     title: '빛의 경계',
     artist: '김현수',
-    floor: '1F 제2전시관',
+    floor: '1F 제1전시관',
     period: '2026.02.01 - 2026.03.15',
     imageUrl: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800',
   },
@@ -16,18 +16,18 @@ const currentExhibitions = [
     id: 2,
     title: '도시의 기억',
     artist: '이서연',
-    floor: '2F 제3전시관',
+    floor: '2F 제2전시관',
     period: '2026.02.10 - 2026.03.20',
     imageUrl: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=800',
   },
 ];
 
 const spaces = [
-  { floor: 'b1f', label: 'B1F', name: '제1전시관', area: '200㎡', capacity: 100 },
-  { floor: '1f', label: '1F', name: '제2전시관', area: '180㎡', capacity: 80 },
-  { floor: '2f', label: '2F', name: '제3전시관', area: '160㎡', capacity: 60 },
-  { floor: '3f', label: '3F', name: '제4전시관', area: '150㎡', capacity: 50 },
-  { floor: '4f', label: '4F', name: '다목적홀', area: '200㎡', capacity: 150 },
+  { floor: '1f', label: '1F', name: '제1전시관', area: '180㎡', capacity: 80 },
+  { floor: '2f', label: '2F', name: '제2전시관', area: '160㎡', capacity: 60 },
+  { floor: '3f', label: '3F', name: '제3전시관', area: '150㎡', capacity: 50 },
+  { floor: '4f', label: '4F', name: '제4전시관', area: '200㎡', capacity: 150 },
+  { floor: 'b1f', label: 'B1F', name: '제5전시관', area: '200㎡', capacity: 100 },
 ];
 
 export default function HomePage() {
@@ -41,24 +41,22 @@ export default function HomePage() {
     <div>
       {/* ── Hero: Framed Image + Bold Headline ── */}
       <section className="pt-12 px-6 pb-12 bg-white">
-        <div className="relative w-full aspect-[3/4] sm:aspect-[4/3] p-4 bg-white border-[12px] border-white shadow-[0_20px_50px_rgba(0,0,0,0.08)] overflow-hidden">
+        {/* Hero image — replace src with /hero-building.jpg when available */}
+        <div className="relative w-full aspect-[3/4] sm:aspect-[4/3] lg:aspect-[16/9] lg:max-w-4xl lg:mx-auto p-4 bg-white border-[12px] border-white shadow-[0_20px_50px_rgba(0,0,0,0.08)] overflow-hidden">
           <img
             alt="SUN ART CENTER"
             className="w-full h-full object-cover grayscale brightness-90 contrast-125"
-            src="https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=1920"
+            src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1920"
           />
         </div>
 
-        <div className="mt-12 flex flex-col gap-8">
+        <div className="mt-12 flex flex-col gap-8 lg:max-w-4xl lg:mx-auto">
           <h1 className="text-5xl sm:text-6xl font-black tracking-tighter leading-[0.85] uppercase">
             Art <br />
             <span className="ml-12">Meets</span> <br />
             Space.
           </h1>
           <div className="thin-divider" />
-          <p className="text-[13px] font-medium leading-relaxed max-w-[280px] uppercase tracking-wide">
-            예술과 건축이 만나는 모노크롬 공간. B1F부터 4F까지, 선아트센터에서 여러분의 전시를 시작하세요.
-          </p>
           <div className="flex gap-4">
             <Link
               to="/exhibition"
@@ -78,7 +76,7 @@ export default function HomePage() {
 
       {/* ── 01 The Gallery: Asymmetric Exhibition Layout ── */}
       <section className="py-12 bg-white">
-        <div className="px-6 mb-16">
+        <div className="px-6 mb-16 lg:max-w-5xl lg:mx-auto">
           <div className="flex items-baseline gap-4 mb-2">
             <span className="text-[10px] font-bold uppercase tracking-widest text-black/40">01</span>
             <h2 className="text-4xl font-black uppercase tracking-tighter">The Gallery</h2>
@@ -89,8 +87,7 @@ export default function HomePage() {
             {currentExhibitions.map((ex, i) => (
               <Link key={ex.id} to={`/exhibition`} className="block group">
                 <div className="flex flex-col gap-6">
-                  {/* Asymmetric: even items right-aligned, odd left-aligned */}
-                  <div className={`${i % 2 === 0 ? 'w-4/5 ml-auto' : 'w-4/5 mr-auto'} img-frame`}>
+                  <div className={`${i % 2 === 0 ? 'w-4/5 lg:w-3/5 ml-auto' : 'w-4/5 lg:w-3/5 mr-auto'} img-frame`}>
                     <img
                       alt={ex.title}
                       className="w-full grayscale group-hover:grayscale-0 transition-all duration-500"
@@ -119,7 +116,7 @@ export default function HomePage() {
 
       {/* ── 02 Spaces: Dark Section ── */}
       <section className="py-20 bg-black text-white">
-        <div className="px-6">
+        <div className="px-6 lg:max-w-5xl lg:mx-auto">
           <div className="flex items-baseline gap-4 mb-2">
             <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">02</span>
             <h2 className="text-4xl font-black uppercase tracking-tighter">Spaces</h2>
@@ -153,7 +150,7 @@ export default function HomePage() {
       {/* ── 03 Notice: Real Data from API ── */}
       {notices.length > 0 && (
         <section className="py-12 bg-white">
-          <div className="px-6">
+          <div className="px-6 lg:max-w-5xl lg:mx-auto">
             <div className="flex items-baseline gap-4 mb-2">
               <span className="text-[10px] font-bold uppercase tracking-widest text-black/40">03</span>
               <h2 className="text-4xl font-black uppercase tracking-tighter">Notice</h2>
