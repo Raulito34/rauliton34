@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Noto Sans KR', 'DM Sans', system-ui, -apple-system, sans-serif;
-  --font-logo: 'DM Sans', system-ui, sans-serif;
-  --color-primary: #111111;
-  --color-secondary: #1a1a1a;
-  --color-accent: #9a8462;
-  --color-accent-light: #b8a07a;
+  --font-sans: 'Noto Sans KR', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Inter', 'Noto Sans KR', system-ui, sans-serif;
+  --color-primary: #000000;
+  --color-secondary: #0a0a0a;
+  --color-accent: #000000;
+  --color-accent-light: #333333;
   --color-light: #fafafa;
   --color-dark: #0a0a0a;
 }
@@ -20,4 +20,15 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+.thin-divider {
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.08);
+  width: 100%;
+}
+
+.img-frame {
+  padding: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }

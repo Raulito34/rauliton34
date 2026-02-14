@@ -66,118 +66,108 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-white/95 backdrop-blur-sm fixed top-0 left-0 right-0 z-50 border-b border-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link
-            to="/"
-            className="flex items-center gap-2"
-            onClick={() => setMobileOpen(false)}
-          >
-            <span className="font-logo text-[17px] sm:text-lg font-semibold tracking-tight text-primary">
-              SUN ART CENTER
-            </span>
-          </Link>
+    <header className="bg-white/90 backdrop-blur-md fixed top-0 left-0 right-0 z-50">
+      <div className="px-6 py-5 flex justify-between items-end">
+        {/* Logo */}
+        <Link
+          to="/"
+          className="text-xl sm:text-2xl font-black tracking-tighter uppercase leading-none"
+          onClick={() => setMobileOpen(false)}
+        >
+          Sun<span className="font-light">Art</span>
+        </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center">
-            {navItems.map((item) => (
-              <div
-                key={item.path}
-                className="relative"
-                onMouseEnter={() => setActiveDropdown(item.path)}
-                onMouseLeave={() => setActiveDropdown(null)}
+        {/* Desktop Nav */}
+        <nav className="hidden lg:flex items-end gap-0">
+          {navItems.map((item) => (
+            <div
+              key={item.path}
+              className="relative"
+              onMouseEnter={() => setActiveDropdown(item.path)}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <Link
+                to={item.path}
+                className={`px-3 text-[10px] font-bold tracking-[0.15em] uppercase transition-colors ${
+                  isActive(item.path)
+                    ? 'text-black'
+                    : 'text-black/40 hover:text-black'
+                }`}
               >
+                {item.label}
+              </Link>
+              {item.sub.length > 0 && activeDropdown === item.path && (
+                <div className="absolute top-full right-0 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)] min-w-[180px] py-3 mt-4">
+                  <div className="thin-divider mb-2" />
+                  {item.sub.map((sub) => (
+                    <Link
+                      key={sub.path}
+                      to={sub.path}
+                      className="block px-5 py-1.5 text-[11px] font-medium uppercase tracking-wide text-black/50 hover:text-black transition-colors"
+                    >
+                      {sub.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </nav>
+
+        {/* Mobile Menu Button */}
+        <button
+          className="lg:hidden text-[10px] font-bold tracking-[0.3em] uppercase"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="메뉴 열기"
+        >
+          {mobileOpen ? 'Close' : 'Index'}
+        </button>
+      </div>
+      <div className="thin-divider mx-6" style={{ width: 'auto' }} />
+
+      {/* Mobile Nav */}
+      {mobileOpen && (
+        <nav className="lg:hidden px-6 py-4 max-h-[calc(100vh-5rem)] overflow-y-auto bg-white">
+          {navItems.map((item) => (
+            <div key={item.path} className="mb-1">
+              {item.sub.length > 0 ? (
+                <button
+                  onClick={() => toggleMobileExpand(item.path)}
+                  className="w-full flex items-center justify-between py-3 text-[11px] font-bold uppercase tracking-[0.2em] text-black/70"
+                >
+                  {item.label}
+                  <span className={`text-[10px] text-black/30 transition-transform ${mobileExpanded === item.path ? 'rotate-45' : ''}`}>
+                    +
+                  </span>
+                </button>
+              ) : (
                 <Link
                   to={item.path}
-                  className={`px-4 py-5 text-[13px] font-medium tracking-wide transition-colors ${
-                    isActive(item.path)
-                      ? 'text-primary'
-                      : 'text-gray-400 hover:text-primary'
-                  }`}
+                  className="block py-3 text-[11px] font-bold uppercase tracking-[0.2em] text-black/70"
+                  onClick={() => setMobileOpen(false)}
                 >
                   {item.label}
                 </Link>
-                {item.sub.length > 0 && activeDropdown === item.path && (
-                  <div className="absolute top-full left-0 bg-white shadow-lg min-w-[180px] py-2 border-t border-primary">
-                    {item.sub.map((sub) => (
-                      <Link
-                        key={sub.path}
-                        to={sub.path}
-                        className="block px-5 py-2 text-[13px] text-gray-500 hover:text-primary hover:bg-gray-50 transition-colors"
-                      >
-                        {sub.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </nav>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="lg:hidden p-2 text-gray-600"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="메뉴 열기"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {mobileOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
               )}
-            </svg>
-          </button>
-        </div>
-
-        {/* Mobile Nav */}
-        {mobileOpen && (
-          <nav className="lg:hidden border-t border-gray-100 py-2 max-h-[calc(100vh-4rem)] overflow-y-auto">
-            {navItems.map((item) => (
-              <div key={item.path}>
-                {item.sub.length > 0 ? (
-                  <button
-                    onClick={() => toggleMobileExpand(item.path)}
-                    className="w-full flex items-center justify-between px-4 py-2.5 text-[13px] font-medium text-gray-700"
-                  >
-                    {item.label}
-                    <svg
-                      className={`w-3.5 h-3.5 text-gray-400 transition-transform ${mobileExpanded === item.path ? 'rotate-180' : ''}`}
-                      fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              {item.sub.length > 0 && mobileExpanded === item.path && (
+                <div className="pb-2 pl-4">
+                  {item.sub.map((sub) => (
+                    <Link
+                      key={sub.path}
+                      to={sub.path}
+                      className="block py-1.5 text-[10px] font-medium uppercase tracking-wide text-black/40 hover:text-black"
+                      onClick={() => setMobileOpen(false)}
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                ) : (
-                  <Link
-                    to={item.path}
-                    className="block px-4 py-2.5 text-[13px] font-medium text-gray-700"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                )}
-                {item.sub.length > 0 && mobileExpanded === item.path && (
-                  <div className="bg-gray-50 py-1">
-                    {item.sub.map((sub) => (
-                      <Link
-                        key={sub.path}
-                        to={sub.path}
-                        className="block px-8 py-2 text-xs text-gray-500 hover:text-primary"
-                        onClick={() => setMobileOpen(false)}
-                      >
-                        {sub.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </nav>
-        )}
-      </div>
+                      {sub.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+              <div className="thin-divider" />
+            </div>
+          ))}
+        </nav>
+      )}
     </header>
   );
 }
