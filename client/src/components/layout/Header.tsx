@@ -66,15 +66,20 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-white/90 backdrop-blur-md fixed top-0 left-0 right-0 z-50">
+    <header className="sticky top-0 z-50 bg-white/95 blur-backdrop border-b border-black">
       <div className="px-6 py-5 flex justify-between items-end">
         {/* Logo */}
         <Link
           to="/"
-          className="text-xl sm:text-2xl font-black tracking-tighter uppercase leading-none"
+          className="leading-none"
           onClick={() => setMobileOpen(false)}
         >
-          Sun<span className="font-light">Art</span>
+          <h1 className="text-xl sm:text-2xl font-light tracking-tighter uppercase leading-none">
+            SUN ART CENTER
+          </h1>
+          <p className="text-[10px] mt-1.5 tracking-[0.3em] uppercase font-medium text-black/50">
+            Space Inventory / 2026
+          </p>
         </Link>
 
         {/* Desktop Nav */}
@@ -88,7 +93,7 @@ export default function Header() {
             >
               <Link
                 to={item.path}
-                className={`px-3 text-[10px] font-bold tracking-[0.15em] uppercase transition-colors ${
+                className={`px-3 text-[10px] font-semibold tracking-[0.15em] uppercase transition-colors ${
                   isActive(item.path)
                     ? 'text-black'
                     : 'text-black/40 hover:text-black'
@@ -97,7 +102,7 @@ export default function Header() {
                 {item.label}
               </Link>
               {item.sub.length > 0 && activeDropdown === item.path && (
-                <div className="absolute top-full right-0 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)] min-w-[180px] py-3 mt-4">
+                <div className="absolute top-full right-0 bg-white border border-black/5 min-w-[180px] py-3 mt-4">
                   <div className="thin-divider mb-2" />
                   {item.sub.map((sub) => (
                     <Link
@@ -116,24 +121,25 @@ export default function Header() {
 
         {/* Mobile Menu Button */}
         <button
-          className="lg:hidden text-[10px] font-bold tracking-[0.3em] uppercase"
+          className="lg:hidden flex items-center text-black"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="메뉴 열기"
         >
-          {mobileOpen ? 'Close' : 'Index'}
+          <span className="material-symbols-outlined font-light text-[22px]">
+            {mobileOpen ? 'close' : 'filter_list'}
+          </span>
         </button>
       </div>
-      <div className="thin-divider mx-6" style={{ width: 'auto' }} />
 
       {/* Mobile Nav */}
       {mobileOpen && (
-        <nav className="lg:hidden px-6 py-4 max-h-[calc(100vh-5rem)] overflow-y-auto bg-white">
+        <nav className="lg:hidden px-6 py-4 max-h-[calc(100vh-5rem)] overflow-y-auto bg-white border-t border-black/5">
           {navItems.map((item) => (
-            <div key={item.path} className="mb-1">
+            <div key={item.path} className="mb-0">
               {item.sub.length > 0 ? (
                 <button
                   onClick={() => toggleMobileExpand(item.path)}
-                  className="w-full flex items-center justify-between py-3 text-[11px] font-bold uppercase tracking-[0.2em] text-black/70"
+                  className="w-full flex items-center justify-between py-3.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-black/70 border-b border-black/5"
                 >
                   {item.label}
                   <span className={`text-[10px] text-black/30 transition-transform ${mobileExpanded === item.path ? 'rotate-45' : ''}`}>
@@ -143,19 +149,19 @@ export default function Header() {
               ) : (
                 <Link
                   to={item.path}
-                  className="block py-3 text-[11px] font-bold uppercase tracking-[0.2em] text-black/70"
+                  className="block py-3.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-black/70 border-b border-black/5"
                   onClick={() => setMobileOpen(false)}
                 >
                   {item.label}
                 </Link>
               )}
               {item.sub.length > 0 && mobileExpanded === item.path && (
-                <div className="pb-2 pl-4">
+                <div className="pb-2 pl-4 border-b border-black/5">
                   {item.sub.map((sub) => (
                     <Link
                       key={sub.path}
                       to={sub.path}
-                      className="block py-1.5 text-[10px] font-medium uppercase tracking-wide text-black/40 hover:text-black"
+                      className="block py-2 text-[10px] font-medium uppercase tracking-wide text-black/40 hover:text-black"
                       onClick={() => setMobileOpen(false)}
                     >
                       {sub.label}
@@ -163,7 +169,6 @@ export default function Header() {
                   ))}
                 </div>
               )}
-              <div className="thin-divider" />
             </div>
           ))}
         </nav>
