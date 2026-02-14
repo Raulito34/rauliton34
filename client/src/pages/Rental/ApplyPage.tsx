@@ -4,11 +4,11 @@ import type { RentalApplication } from '../../types';
 import { addBooking } from '../../services/rentalStore';
 
 const spaceOptions = [
-  'B1F 제1전시관',
-  '1F 제2전시관',
-  '2F 제3전시관',
-  '3F 제4전시관',
-  '4F 다목적홀',
+  '1F 제1전시관',
+  '2F 제2전시관',
+  '3F 제3전시관',
+  '4F 제4전시관',
+  'B1F 제5전시관',
 ];
 
 export default function ApplyPage() {
