@@ -2,45 +2,56 @@ import { Link } from 'react-router-dom';
 
 export default function Footer() {
   return (
-    <footer className="bg-primary text-gray-400">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-          {/* Logo & Info */}
-          <div>
-            <h3 className="font-logo text-white text-lg font-semibold tracking-tight mb-4">
-              SUN ART CENTER
-            </h3>
-            <p className="text-sm leading-relaxed">
-              서울시 종로구 인사동길 00<br />
-              선아트센터 (B1F ~ 4F)
-            </p>
-          </div>
+    <footer className="bg-white pt-24 pb-20 px-6">
+      {/* Bold CTA */}
+      <div className="max-w-7xl mx-auto mb-20">
+        <h3 className="text-4xl sm:text-5xl font-black uppercase tracking-tighter mb-4 leading-none">
+          전시를 <br />시작하세요.
+        </h3>
+        <p className="text-[11px] font-medium uppercase tracking-wide text-black/40 mb-8 max-w-[280px]">
+          선아트센터의 전시 공간을 대관하여 여러분의 예술 작품을 선보이세요.
+        </p>
+        <Link
+          to="/rental/status"
+          className="inline-block text-[10px] font-black uppercase tracking-[0.2em] border-b border-black pb-1 hover:text-black/60 hover:border-black/60 transition-colors"
+        >
+          대관 신청하기
+        </Link>
+      </div>
 
-          {/* Contact */}
-          <div>
-            <h4 className="text-white text-xs font-medium tracking-widest uppercase mb-4">Contact</h4>
-            <ul className="text-sm space-y-2">
-              <li>TEL: 02-000-0000</li>
-              <li>FAX: 02-000-0001</li>
-              <li>Email: info@sunartcenter.com</li>
-              <li>운영시간: 10:00 - 18:00 (월요일 휴관)</li>
-            </ul>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h4 className="text-white text-xs font-medium tracking-widest uppercase mb-4">Links</h4>
-            <ul className="text-sm space-y-2">
-              <li><Link to="/exhibition" className="hover:text-white transition-colors">전시안내</Link></li>
-              <li><Link to="/spaces" className="hover:text-white transition-colors">공간안내</Link></li>
-              <li><Link to="/rental/status" className="hover:text-white transition-colors">대관신청</Link></li>
-              <li><Link to="/contact" className="hover:text-white transition-colors">문의하기</Link></li>
-            </ul>
-          </div>
+      {/* Info Grid */}
+      <div className="max-w-7xl mx-auto grid grid-cols-2 gap-8 mb-20">
+        <div>
+          <p className="text-[9px] font-black uppercase tracking-widest text-black/30 mb-4">Location</p>
+          <p className="text-[11px] font-bold uppercase leading-relaxed">
+            서울시 종로구<br />인사동길 00
+          </p>
         </div>
+        <div>
+          <p className="text-[9px] font-black uppercase tracking-widest text-black/30 mb-4">Contact</p>
+          <p className="text-[11px] font-bold uppercase leading-relaxed">
+            info@sunartcenter.com<br />02-000-0000
+          </p>
+        </div>
+      </div>
 
-        <div className="border-t border-gray-800 mt-12 pt-8 text-center text-xs text-gray-600">
-          <p>&copy; 2026 SUN ART CENTER. All rights reserved.</p>
+      {/* Quick Links */}
+      <div className="max-w-7xl mx-auto mb-16">
+        <div className="flex flex-wrap gap-x-6 gap-y-2">
+          <Link to="/exhibition" className="text-[10px] font-bold uppercase tracking-[0.15em] text-black/30 hover:text-black transition-colors">전시안내</Link>
+          <Link to="/spaces" className="text-[10px] font-bold uppercase tracking-[0.15em] text-black/30 hover:text-black transition-colors">공간안내</Link>
+          <Link to="/rental" className="text-[10px] font-bold uppercase tracking-[0.15em] text-black/30 hover:text-black transition-colors">대관안내</Link>
+          <Link to="/news" className="text-[10px] font-bold uppercase tracking-[0.15em] text-black/30 hover:text-black transition-colors">소식</Link>
+          <Link to="/contact" className="text-[10px] font-bold uppercase tracking-[0.15em] text-black/30 hover:text-black transition-colors">문의</Link>
+        </div>
+      </div>
+
+      {/* Bottom */}
+      <div className="max-w-7xl mx-auto">
+        <div className="thin-divider mb-8" />
+        <div className="flex justify-between items-center text-black/30">
+          <span className="text-[10px] font-black uppercase tracking-tighter">Sun Art Center</span>
+          <span className="text-[8px] font-bold uppercase tracking-[0.2em]">&copy; 2026</span>
         </div>
       </div>
     </footer>
