@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 
 const pricingData = [
-  { floor: '1F', name: '제1전시관', area: '180㎡', week1: 250, week2: 450, week3: 600, week4: 750 },
-  { floor: '2F', name: '제2전시관', area: '160㎡', week1: 180, week2: 320, week3: 450, week4: 550 },
-  { floor: '3F', name: '제3전시관', area: '150㎡', week1: 170, week2: 300, week3: 420, week4: 520 },
-  { floor: '4F', name: '제4전시관', area: '200㎡', week1: 300, week2: 550, week3: 750, week4: 900 },
-  { floor: 'B1F', name: '제5전시관', area: '200㎡', week1: 200, week2: 350, week3: 500, week4: 600 },
+  { floor: '1F', name: '1전시관', area: '180㎡', week1: 250, week2: 450, week3: 600, week4: 750 },
+  { floor: '2F', name: '2전시관', area: '160㎡', week1: 180, week2: 320, week3: 450, week4: 550 },
+  { floor: '3F', name: '3전시관', area: '150㎡', week1: 170, week2: 300, week3: 420, week4: 520 },
+  { floor: '4F', name: '4전시관', area: '200㎡', week1: 300, week2: 550, week3: 750, week4: 900 },
+  { floor: 'B1F', name: 'B1전시관', area: '200㎡', week1: 200, week2: 350, week3: 500, week4: 600 },
 ];
 
 export default function PricingPage() {
@@ -94,7 +94,7 @@ export default function PricingPage() {
               <li>비영리 단체 및 신진 작가의 경우 별도 협의가 가능합니다.</li>
               <li>대관료에는 기본 조명, 전기, 냉난방비가 포함되어 있습니다.</li>
               <li>설치/철수 기간은 대관 기간에 포함됩니다.</li>
-              <li>B1F 제5전시관은 시간 단위 대관도 가능합니다 (별도 문의).</li>
+              <li>B1F B1전시관은 시간 단위 대관도 가능합니다 (별도 문의).</li>
             </ul>
           </div>
 

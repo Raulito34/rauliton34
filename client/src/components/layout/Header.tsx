@@ -24,11 +24,11 @@ const navItems = [
     label: '공간안내',
     path: '/spaces',
     sub: [
-      { label: '1F 제1전시관', path: '/spaces/1f' },
-      { label: '2F 제2전시관', path: '/spaces/2f' },
-      { label: '3F 제3전시관', path: '/spaces/3f' },
-      { label: '4F 제4전시관', path: '/spaces/4f' },
-      { label: 'B1F 제5전시관', path: '/spaces/b1f' },
+      { label: '1F 1전시관', path: '/spaces/1f' },
+      { label: '2F 2전시관', path: '/spaces/2f' },
+      { label: '3F 3전시관', path: '/spaces/3f' },
+      { label: '4F 4전시관', path: '/spaces/4f' },
+      { label: 'B1F B1전시관', path: '/spaces/b1f' },
     ],
   },
   {

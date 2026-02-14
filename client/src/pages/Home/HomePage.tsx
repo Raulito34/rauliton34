@@ -8,7 +8,7 @@ const currentExhibitions = [
     id: 1,
     title: '빛의 경계',
     artist: '김현수',
-    floor: '1F 제1전시관',
+    floor: '1F 1전시관',
     period: '2026.02.01 - 2026.03.15',
     imageUrl: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800',
   },
@@ -16,18 +16,18 @@ const currentExhibitions = [
     id: 2,
     title: '도시의 기억',
     artist: '이서연',
-    floor: '2F 제2전시관',
+    floor: '2F 2전시관',
     period: '2026.02.10 - 2026.03.20',
     imageUrl: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=800',
   },
 ];
 
 const spaces = [
-  { floor: '1f', label: '1F', name: '제1전시관', area: '180㎡', capacity: 80 },
-  { floor: '2f', label: '2F', name: '제2전시관', area: '160㎡', capacity: 60 },
-  { floor: '3f', label: '3F', name: '제3전시관', area: '150㎡', capacity: 50 },
-  { floor: '4f', label: '4F', name: '제4전시관', area: '200㎡', capacity: 150 },
-  { floor: 'b1f', label: 'B1F', name: '제5전시관', area: '200㎡', capacity: 100 },
+  { floor: '1f', label: '1F', name: '1전시관', area: '180㎡', capacity: 80 },
+  { floor: '2f', label: '2F', name: '2전시관', area: '160㎡', capacity: 60 },
+  { floor: '3f', label: '3F', name: '3전시관', area: '150㎡', capacity: 50 },
+  { floor: '4f', label: '4F', name: '4전시관', area: '200㎡', capacity: 150 },
+  { floor: 'b1f', label: 'B1F', name: 'B1전시관', area: '200㎡', capacity: 100 },
 ];
 
 export default function HomePage() {
@@ -74,12 +74,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── 01 The Gallery: Asymmetric Exhibition Layout ── */}
+      {/* ── 01 Exhibitions ── */}
       <section className="py-12 bg-white">
         <div className="px-6 mb-16 lg:max-w-5xl lg:mx-auto">
           <div className="flex items-baseline gap-4 mb-2">
             <span className="text-[10px] font-bold uppercase tracking-widest text-black/40">01</span>
-            <h2 className="text-4xl font-black uppercase tracking-tighter">The Gallery</h2>
+            <h2 className="text-4xl font-black uppercase tracking-tighter">Exhibitions</h2>
           </div>
           <div className="thin-divider mb-8" />
 
@@ -87,14 +87,14 @@ export default function HomePage() {
             {currentExhibitions.map((ex, i) => (
               <Link key={ex.id} to={`/exhibition`} className="block group">
                 <div className="flex flex-col gap-6">
-                  <div className={`${i % 2 === 0 ? 'w-4/5 lg:w-3/5 ml-auto' : 'w-4/5 lg:w-3/5 mr-auto'} img-frame`}>
+                  <div className="w-full lg:max-w-2xl lg:mx-auto img-frame">
                     <img
                       alt={ex.title}
-                      className="w-full grayscale group-hover:grayscale-0 transition-all duration-500"
+                      className="w-full aspect-[4/3] object-cover"
                       src={ex.imageUrl}
                     />
                   </div>
-                  <div className={`${i % 2 === 0 ? 'w-2/3 pr-4' : 'w-2/3 ml-auto text-right pl-4'}`}>
+                  <div className="lg:max-w-2xl lg:mx-auto">
                     <h3 className="text-xl font-black uppercase tracking-tight mb-2">{ex.title}</h3>
                     <p className="text-[11px] leading-relaxed text-black/60 font-medium mb-1 uppercase">
                       {ex.artist} · {ex.floor}

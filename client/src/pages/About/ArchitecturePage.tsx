@@ -42,11 +42,11 @@ export default function ArchitecturePage() {
             <h2 className="text-2xl font-bold text-primary mb-8 text-center">층별 안내</h2>
             <div className="space-y-6">
               {[
-                { floor: '4F', name: '제4전시관', area: '200㎡', desc: '세미나, 공연, 특별전시가 가능한 다목적 공간으로, 가변형 무대와 조명 시스템을 갖추고 있습니다.' },
-                { floor: '3F', name: '제3전시관', area: '150㎡', desc: '사진, 공예 등 소규모 작품 전시에 최적화된 공간으로, 섬세한 조명 시스템을 제공합니다.' },
-                { floor: '2F', name: '제2전시관', area: '160㎡', desc: '개인전 및 그룹전에 적합한 공간으로, 가벽 설치가 자유로워 다양한 전시 구성이 가능합니다.' },
-                { floor: '1F', name: '제1전시관', area: '180㎡', desc: '기획전시와 회화 전시의 중심 공간으로, 높은 천장고와 자연광 유입이 특징입니다.' },
-                { floor: 'B1F', name: '제5전시관', area: '200㎡', desc: '미디어아트와 설치미술에 최적화된 공간으로, 암실 구현과 대형 프로젝션이 가능합니다.' },
+                { floor: '4F', name: '4전시관', area: '200㎡', desc: '세미나, 공연, 특별전시가 가능한 다목적 공간으로, 가변형 무대와 조명 시스템을 갖추고 있습니다.' },
+                { floor: '3F', name: '3전시관', area: '150㎡', desc: '사진, 공예 등 소규모 작품 전시에 최적화된 공간으로, 섬세한 조명 시스템을 제공합니다.' },
+                { floor: '2F', name: '2전시관', area: '160㎡', desc: '개인전 및 그룹전에 적합한 공간으로, 가벽 설치가 자유로워 다양한 전시 구성이 가능합니다.' },
+                { floor: '1F', name: '1전시관', area: '180㎡', desc: '기획전시와 회화 전시의 중심 공간으로, 높은 천장고와 자연광 유입이 특징입니다.' },
+                { floor: 'B1F', name: 'B1전시관', area: '200㎡', desc: '미디어아트와 설치미술에 최적화된 공간으로, 암실 구현과 대형 프로젝션이 가능합니다.' },
               ].map((f) => (
                 <div key={f.floor} className="flex items-start gap-6 p-6 bg-light rounded">
                   <div className="w-20 text-center flex-shrink-0">

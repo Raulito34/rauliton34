@@ -167,7 +167,7 @@ export default function ExhibitionPage() {
                   <div className="grid grid-cols-3 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">장소 *</label>
-                      <input name="floor" value={form.floor} onChange={handleChange} required placeholder="예: 1F 제1전시관"
+                      <input name="floor" value={form.floor} onChange={handleChange} required placeholder="예: 1F 1전시관"
                         className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-accent" />
                     </div>
                     <div>
