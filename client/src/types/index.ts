@@ -75,3 +75,10 @@ export interface ContactForm {
   subject: string;
   message: string;
 }
+
+export interface SiteImage {
+  id: number;
+  key: string;
+  imageUrl: string;
+  label: string;
+}

@@ -188,6 +188,37 @@ app.delete('/api/news/:id', requireAdmin, async (req, res) => {
   res.json({ success: true });
 });
 
+// --- Site Images (homepage) ---
+app.get('/api/site-images', async (_req, res) => {
+  const images = await prisma.siteImage.findMany({ orderBy: { id: 'asc' } });
+  res.json(images);
+});
+
+app.patch('/api/site-images/:key', requireAdmin, async (req, res) => {
+  const { imageUrl, label } = req.body;
+  const data: Record<string, string> = {};
+  if (imageUrl !== undefined) data.imageUrl = imageUrl;
+  if (label !== undefined) data.label = label;
+  const image = await prisma.siteImage.update({
+    where: { key: String(req.params.key) },
+    data,
+  });
+  res.json(image);
+});
+
+app.post('/api/site-images', requireAdmin, async (req, res) => {
+  const { key, imageUrl, label } = req.body;
+  const image = await prisma.siteImage.create({
+    data: { key, imageUrl, label: label || '' },
+  });
+  res.status(201).json(image);
+});
+
+app.delete('/api/site-images/:key', requireAdmin, async (req, res) => {
+  await prisma.siteImage.delete({ where: { key: String(req.params.key) } });
+  res.json({ success: true });
+});
+
 // --- Contact ---
 app.post('/api/contact', async (req, res) => {
   const { name, email, phone, subject, message } = req.body;

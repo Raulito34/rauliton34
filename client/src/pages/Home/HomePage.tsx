@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../services/api';
-import type { NewsItem } from '../../types';
+import type { NewsItem, SiteImage } from '../../types';
 
-const currentExhibitions = [
+const DEFAULT_HERO = 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1920';
+
+const defaultExhibitions = [
   {
     id: 1,
     title: '빛의 경계',
@@ -32,9 +34,22 @@ const spaces = [
 
 export default function HomePage() {
   const [notices, setNotices] = useState<NewsItem[]>([]);
+  const [heroImage, setHeroImage] = useState(DEFAULT_HERO);
+  const [currentExhibitions, setCurrentExhibitions] = useState(defaultExhibitions);
 
   useEffect(() => {
     api.getNews('notice').then(setNotices).catch(() => {});
+    api.getSiteImages().then((images: SiteImage[]) => {
+      const imageMap: Record<string, string> = {};
+      images.forEach((img) => { imageMap[img.key] = img.imageUrl; });
+      if (imageMap.hero) setHeroImage(imageMap.hero);
+      setCurrentExhibitions((prev) =>
+        prev.map((ex, i) => {
+          const key = `exhibition_${i + 1}`;
+          return imageMap[key] ? { ...ex, imageUrl: imageMap[key] } : ex;
+        })
+      );
+    }).catch(() => {});
   }, []);
 
   return (
@@ -46,7 +61,7 @@ export default function HomePage() {
           <img
             alt="SUN ART CENTER"
             className="w-full h-full object-cover grayscale brightness-90 contrast-125"
-            src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1920"
+            src={heroImage}
           />
         </div>
 

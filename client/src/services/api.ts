@@ -1,4 +1,4 @@
-import type { Exhibition, Space, RentalPricing, RentalApplication, RentalBooking, NewsItem, ContactForm } from '../types';
+import type { Exhibition, Space, RentalPricing, RentalApplication, RentalBooking, NewsItem, ContactForm, SiteImage } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL}/api`
@@ -99,4 +99,10 @@ export const api = {
     patchJson<NewsItem>(`/news/${id}`, data),
   deleteNews: (id: number) => deleteJson(`/news/${id}`),
   submitContact: (data: ContactForm) => postJson('/contact', data),
+  getSiteImages: () => fetchJson<SiteImage[]>('/site-images'),
+  updateSiteImage: (key: string, data: { imageUrl?: string; label?: string }) =>
+    patchJson<SiteImage>(`/site-images/${key}`, data),
+  createSiteImage: (data: { key: string; imageUrl: string; label?: string }) =>
+    postJsonAdmin<SiteImage>('/site-images', data),
+  deleteSiteImage: (key: string) => deleteJson(`/site-images/${key}`),
 };
