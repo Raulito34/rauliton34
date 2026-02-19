@@ -81,7 +81,7 @@ export default function SpaceDetailPage() {
           {/* Specs */}
           <div className="flex items-baseline gap-4 mb-2">
             <span className="text-[10px] font-bold uppercase tracking-widest text-black/40">Specs</span>
-            <h2 className="text-2xl font-black uppercase tracking-tighter">{space.label} {space.name}</h2>
+            <h2 className="text-2xl font-black uppercase tracking-tighter">{space.name}</h2>
           </div>
           <div className="thin-divider mb-8" />
 

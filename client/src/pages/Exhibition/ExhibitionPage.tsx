@@ -4,7 +4,6 @@ import { api, getAdminCode } from '../../services/api';
 import type { Exhibition } from '../../types';
 
 const tabs = [
-  { key: 'all', label: '전체' },
   { key: 'current', label: '현재전시' },
   { key: 'upcoming', label: '예정전시' },
   { key: 'past', label: '지난전시' },
@@ -20,7 +19,7 @@ const emptyForm: {
 
 export default function ExhibitionPage() {
   const [searchParams] = useSearchParams();
-  const statusParam = searchParams.get('status') || 'all';
+  const statusParam = searchParams.get('status') || 'current';
   const [activeTab, setActiveTab] = useState(statusParam);
   const [exhibitions, setExhibitions] = useState<(Exhibition & { details?: string })[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,7 +33,7 @@ export default function ExhibitionPage() {
 
   const refresh = async () => {
     try {
-      const data = await api.getExhibitions(activeTab === 'all' ? undefined : activeTab);
+      const data = await api.getExhibitions(activeTab);
       setExhibitions(data as (Exhibition & { details?: string })[]);
     } catch {
       setExhibitions([]);
@@ -100,9 +99,7 @@ export default function ExhibitionPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const filtered = activeTab === 'all'
-    ? exhibitions
-    : exhibitions.filter((e) => e.status === activeTab);
+  const filtered = exhibitions.filter((e) => e.status === activeTab);
 
   return (
     <div>

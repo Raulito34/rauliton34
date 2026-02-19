@@ -100,6 +100,15 @@ async function main() {
     ],
   });
 
+  // Seed Site Images (homepage)
+  await prisma.siteImage.createMany({
+    data: [
+      { key: 'hero', imageUrl: 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1920', label: '메인 히어로 이미지' },
+      { key: 'exhibition_1', imageUrl: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800', label: '전시 1 이미지 (빛의 경계)' },
+      { key: 'exhibition_2', imageUrl: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=800', label: '전시 2 이미지 (도시의 기억)' },
+    ],
+  });
+
   console.log('Seed data created successfully!');
 }
 
