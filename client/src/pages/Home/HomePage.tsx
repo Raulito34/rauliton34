@@ -25,11 +25,11 @@ const defaultExhibitions = [
 ];
 
 const spaces = [
-  { floor: '1f', label: '1F', name: '1전시관', area: '120㎡ (35평)', capacity: 80 },
-  { floor: '2f', label: '2F', name: '2전시관', area: '250㎡ (75평)', capacity: 60 },
-  { floor: '3f', label: '3F', name: '3전시관', area: '250㎡ (75평)', capacity: 50 },
-  { floor: '4f', label: '4F', name: '4전시관', area: '70㎡ (20평)', capacity: 150 },
-  { floor: 'b1f', label: 'B1F', name: 'B1전시관', area: '250㎡ (75평)', capacity: 100 },
+  { floor: '1f', label: '1F', name: '1전시관', area: '120㎡ (35평)' },
+  { floor: '2f', label: '2F', name: '2전시관', area: '250㎡ (75평)' },
+  { floor: '3f', label: '3F', name: '3전시관', area: '250㎡ (75평)' },
+  { floor: '4f', label: '4F', name: '4전시관', area: '70㎡ (20평)' },
+  { floor: 'b1f', label: 'B1F', name: 'B1전시관', area: '250㎡ (75평)' },
 ];
 
 export default function HomePage() {
@@ -148,7 +148,7 @@ export default function HomePage() {
                       {s.label} {s.name}
                     </h4>
                     <p className="text-[11px] font-light opacity-50 leading-relaxed uppercase">
-                      면적 {s.area} · 수용 {s.capacity}명
+                      면적 {s.area}
                     </p>
                   </div>
                   <span className="text-[10px] font-black uppercase tracking-[0.15em] border-b border-white/30 pb-0.5 opacity-0 group-hover:opacity-60 transition-opacity">

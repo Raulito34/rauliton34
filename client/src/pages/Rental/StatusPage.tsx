@@ -12,11 +12,11 @@ const spaces = [
 ];
 
 const floorPlans: Record<string, string[]> = {
-  '1F 1전시관': ['면적: 120㎡ (35평)', '층고: 5.0m', '수용: 80명', '남향 자연광, 이동식 가벽 12패널'],
-  '2F 2전시관': ['면적: 250㎡ (75평)', '층고: 3.5m', '수용: 60명', '자유 가벽 배치, 스팟/월워셔 조명'],
-  '3F 3전시관': ['면적: 250㎡ (75평)', '층고: 3.2m', '수용: 50명', '정밀 디밍 조명, 유리 진열장 8대'],
-  '4F 4전시관': ['면적: 70㎡ (20평)', '층고: 6.0m', '수용: 150명', '가변형 무대, 4K 프로젝터'],
-  'B1F B1전시관': ['면적: 250㎡ (75평)', '층고: 4.5m', '수용: 100명', '암실 구현 가능, 대형 프로젝션 4면'],
+  '1F 1전시관': ['면적: 120㎡ (35평)', '층고: 3.0m', '대형 쇼윈도 및 도로 직접 노출', '조명 시스템', '시스템 냉난방', '엘리베이터'],
+  '2F 2전시관': ['면적: 250㎡ (75평)', '층고: 2.6m', '조명 시스템', '시스템 냉난방', '엘리베이터'],
+  '3F 3전시관': ['면적: 250㎡ (75평)', '층고: 2.6m', '조명 시스템', '시스템 냉난방', '엘리베이터'],
+  '4F 4전시관': ['면적: 70㎡ (20평)', '층고: 4.3m', '조명 시스템', '시스템 냉난방', '엘리베이터', '4.3m 천장고'],
+  'B1F B1전시관': ['면적: 250㎡ (75평)', '층고: 2.6m', '조명 시스템', '시스템 냉난방'],
 };
 
 function getTuesday(d: Date): Date {
@@ -89,7 +89,7 @@ const statusLabelMap: Record<string, string> = {
 };
 
 const statusColorMap: Record<string, string> = {
-  available: 'text-blue-600',
+  available: 'text-emerald-600',
   reviewing: 'text-orange-500',
   pending: 'text-orange-500',
   confirmed: 'text-gray-400',
@@ -186,7 +186,7 @@ export default function StatusPage() {
             </p>
             <div className="flex items-center gap-6 text-sm">
               <span className="flex items-center gap-2">
-                <span className="w-4 h-4 rounded bg-blue-100 border border-blue-400 inline-block" />
+                <span className="w-4 h-4 rounded bg-emerald-100 border border-emerald-400 inline-block" />
                 대관가능
               </span>
               <span className="flex items-center gap-2">
@@ -260,9 +260,9 @@ export default function StatusPage() {
                                     type="checkbox"
                                     checked={checked}
                                     onChange={() => toggleSelect(wi, sp.key)}
-                                    className="w-4 h-4 accent-blue-600 cursor-pointer"
+                                    className="w-4 h-4 accent-emerald-600 cursor-pointer"
                                   />
-                                  <span className="text-blue-600 text-xs font-medium">선택</span>
+                                  <span className="text-emerald-600 text-xs font-medium">선택</span>
                                 </label>
                               ) : (
                                 <span className={`text-xs font-medium ${statusColorMap[status] || 'text-gray-400'}`}>
