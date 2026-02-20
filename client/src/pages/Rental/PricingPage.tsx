@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 
 const halls = [
-  { name: '1전시관', floor: '1F', area: '180㎡' },
-  { name: '2전시관', floor: '2F', area: '160㎡' },
-  { name: '3전시관', floor: '3F', area: '150㎡' },
-  { name: '4전시관', floor: '4F', area: '200㎡' },
-  { name: 'B1전시관', floor: 'B1F', area: '200㎡' },
+  { name: '1전시관', floor: '1F', area: '115.5㎡ (35평)' },
+  { name: '2전시관', floor: '2F', area: '247.5㎡ (75평)' },
+  { name: '3전시관', floor: '3F', area: '247.5㎡ (75평)' },
+  { name: '4전시관', floor: '4F', area: '66㎡ (20평)' },
+  { name: 'B1전시관', floor: 'B1F', area: '247.5㎡ (75평)' },
 ];
 
 const seasons = [
@@ -41,37 +41,36 @@ export default function PricingPage() {
 
       <section className="py-16 bg-white">
         <div className="max-w-5xl mx-auto px-4">
-          <p className="text-center text-gray-600 mb-4">
-            시즌별 · 전시관별 1주 기준 대관료 안내입니다.
+          <p className="text-center text-gray-600 text-sm mb-2">
+            시즌별 · 전시관별 1주 기준 대관료 안내
           </p>
-          <p className="text-center text-xs text-gray-400 mb-12">(단위: 만원, VAT 별도)</p>
+          <p className="text-center text-xs text-gray-400 mb-10">(단위: 만원, VAT 별도)</p>
 
-          {/* Season-based pricing cards */}
-          <div className="space-y-12">
+          {/* Season-based pricing - compact single-row layout */}
+          <div className="space-y-6">
             {seasons.map((season) => (
               <div key={season.key}>
                 {/* Season header */}
-                <div className="bg-primary text-white px-6 py-4 flex items-baseline justify-between">
-                  <h3 className="text-lg font-bold">{season.label}</h3>
-                  <span className="text-xs text-white/50">{season.period}</span>
+                <div className="bg-primary text-white px-4 py-2.5 flex items-center justify-between">
+                  <h3 className="text-sm font-bold">{season.label}</h3>
+                  <span className="text-[10px] text-white/50">{season.period}</span>
                 </div>
 
-                {/* Hall cards */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-0 border border-gray-200 border-t-0">
+                {/* Hall cards - always 5 cols on one row */}
+                <div className="grid grid-cols-5 border border-gray-200 border-t-0">
                   {halls.map((hall, i) => (
                     <div
                       key={hall.name}
-                      className={`p-5 text-center ${
+                      className={`py-3 px-2 text-center ${
                         i < halls.length - 1 ? 'border-r border-gray-200' : ''
-                      } ${i >= 2 && i < halls.length ? 'max-sm:border-t max-sm:border-gray-200' : ''} ${i >= 3 ? 'max-lg:border-t max-lg:border-gray-200' : ''}`}
+                      }`}
                     >
-                      <p className="text-sm font-bold text-primary mb-1">{hall.name}</p>
-                      <p className="text-xs text-gray-400 mb-3">{hall.floor} · {hall.area}</p>
-                      <p className="text-2xl font-black text-accent">
+                      <p className="text-[11px] font-bold text-primary leading-tight">{hall.name}</p>
+                      <p className="text-[9px] text-gray-400 mt-0.5 leading-tight">{hall.area}</p>
+                      <p className="text-base font-black text-accent mt-1.5 leading-none">
                         {season.prices[i]}
-                        <span className="text-xs font-medium text-gray-500 ml-0.5">만원</span>
+                        <span className="text-[9px] font-medium text-gray-500">만원</span>
                       </p>
-                      <p className="text-[10px] text-gray-400 mt-1">/ 1주</p>
                     </div>
                   ))}
                 </div>
@@ -80,9 +79,9 @@ export default function PricingPage() {
           </div>
 
           {/* Notes */}
-          <div className="mt-12 bg-light p-6 rounded">
-            <h3 className="font-semibold text-primary mb-3">참고사항</h3>
-            <ul className="text-sm text-gray-600 space-y-2 list-disc list-inside">
+          <div className="mt-10 bg-light p-5 rounded">
+            <h3 className="font-semibold text-primary mb-2 text-sm">참고사항</h3>
+            <ul className="text-xs text-gray-600 space-y-1.5 list-disc list-inside">
               <li>상기 요금은 1주 기본 대관료이며, VAT는 별도입니다.</li>
               <li>2주 이상 대관 시 별도 할인이 적용됩니다.</li>
               <li>2개 이상의 전시관을 동시 대관 시 10% 할인이 적용됩니다.</li>
@@ -93,7 +92,7 @@ export default function PricingPage() {
             </ul>
           </div>
 
-          <div className="text-center mt-10">
+          <div className="text-center mt-8">
             <Link
               to="/rental/apply"
               className="inline-block bg-accent text-white px-8 py-3 text-sm font-medium hover:bg-accent-light transition-colors"
