@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 
 const halls = [
-  { name: '1전시관', floor: '1F', area: '115.5㎡ (35평)' },
-  { name: '2전시관', floor: '2F', area: '247.5㎡ (75평)' },
-  { name: '3전시관', floor: '3F', area: '247.5㎡ (75평)' },
-  { name: '4전시관', floor: '4F', area: '66㎡ (20평)' },
-  { name: 'B1전시관', floor: 'B1F', area: '247.5㎡ (75평)' },
+  { name: '1전시관', floor: '1F', area: '120㎡ (35평)' },
+  { name: '2전시관', floor: '2F', area: '250㎡ (75평)' },
+  { name: '3전시관', floor: '3F', area: '250㎡ (75평)' },
+  { name: '4전시관', floor: '4F', area: '70㎡ (20평)' },
+  { name: 'B1전시관', floor: 'B1F', area: '250㎡ (75평)' },
 ];
 
 const seasons = [

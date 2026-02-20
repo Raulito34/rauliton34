@@ -25,11 +25,11 @@ const defaultExhibitions = [
 ];
 
 const spaces = [
-  { floor: '1f', label: '1F', name: '1전시관', area: '115.5㎡ (35평)', capacity: 80 },
-  { floor: '2f', label: '2F', name: '2전시관', area: '247.5㎡ (75평)', capacity: 60 },
-  { floor: '3f', label: '3F', name: '3전시관', area: '247.5㎡ (75평)', capacity: 50 },
-  { floor: '4f', label: '4F', name: '4전시관', area: '66㎡ (20평)', capacity: 150 },
-  { floor: 'b1f', label: 'B1F', name: 'B1전시관', area: '247.5㎡ (75평)', capacity: 100 },
+  { floor: '1f', label: '1F', name: '1전시관', area: '120㎡ (35평)', capacity: 80 },
+  { floor: '2f', label: '2F', name: '2전시관', area: '250㎡ (75평)', capacity: 60 },
+  { floor: '3f', label: '3F', name: '3전시관', area: '250㎡ (75평)', capacity: 50 },
+  { floor: '4f', label: '4F', name: '4전시관', area: '70㎡ (20평)', capacity: 150 },
+  { floor: 'b1f', label: 'B1F', name: 'B1전시관', area: '250㎡ (75평)', capacity: 100 },
 ];
 
 export default function HomePage() {
