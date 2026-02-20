@@ -4,28 +4,29 @@ import { getBookingStatuses, getSpaceStatusForWeek } from '../../services/rental
 import type { RentalBooking } from '../../types';
 
 const spaces = [
-  { key: '1F 1전시관', floor: '1F', name: '1전시관', area: '180㎡' },
-  { key: '2F 2전시관', floor: '2F', name: '2전시관', area: '160㎡' },
-  { key: '3F 3전시관', floor: '3F', name: '3전시관', area: '150㎡' },
-  { key: '4F 4전시관', floor: '4F', name: '4전시관', area: '200㎡' },
-  { key: 'B1F B1전시관', floor: 'B1F', name: 'B1전시관', area: '200㎡' },
+  { key: '1F 1전시관', floor: '1F', name: '1전시관', area: '120㎡ (35평)' },
+  { key: '2F 2전시관', floor: '2F', name: '2전시관', area: '250㎡ (75평)' },
+  { key: '3F 3전시관', floor: '3F', name: '3전시관', area: '250㎡ (75평)' },
+  { key: '4F 4전시관', floor: '4F', name: '4전시관', area: '70㎡ (20평)' },
+  { key: 'B1F B1전시관', floor: 'B1F', name: 'B1전시관', area: '250㎡ (75평)' },
 ];
 
 const floorPlans: Record<string, string[]> = {
-  '1F 1전시관': ['면적: 180㎡', '층고: 5.0m', '수용: 80명', '남향 자연광, 이동식 가벽 12패널'],
-  '2F 2전시관': ['면적: 160㎡', '층고: 3.5m', '수용: 60명', '자유 가벽 배치, 스팟/월워셔 조명'],
-  '3F 3전시관': ['면적: 150㎡', '층고: 3.2m', '수용: 50명', '정밀 디밍 조명, 유리 진열장 8대'],
-  '4F 4전시관': ['면적: 200㎡', '층고: 6.0m', '수용: 150명', '가변형 무대, 4K 프로젝터'],
-  'B1F B1전시관': ['면적: 200㎡', '층고: 4.5m', '수용: 100명', '암실 구현 가능, 대형 프로젝션 4면'],
+  '1F 1전시관': ['면적: 120㎡ (35평)', '층고: 5.0m', '수용: 80명', '남향 자연광, 이동식 가벽 12패널'],
+  '2F 2전시관': ['면적: 250㎡ (75평)', '층고: 3.5m', '수용: 60명', '자유 가벽 배치, 스팟/월워셔 조명'],
+  '3F 3전시관': ['면적: 250㎡ (75평)', '층고: 3.2m', '수용: 50명', '정밀 디밍 조명, 유리 진열장 8대'],
+  '4F 4전시관': ['면적: 70㎡ (20평)', '층고: 6.0m', '수용: 150명', '가변형 무대, 4K 프로젝터'],
+  'B1F B1전시관': ['면적: 250㎡ (75평)', '층고: 4.5m', '수용: 100명', '암실 구현 가능, 대형 프로젝션 4면'],
 };
 
-function getMonday(d: Date): Date {
+function getTuesday(d: Date): Date {
   const day = d.getDay();
-  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-  const mon = new Date(d);
-  mon.setDate(diff);
-  mon.setHours(0, 0, 0, 0);
-  return mon;
+  // Tuesday = 2. If today is Sun(0) or Mon(1), go back to last Tuesday
+  const diff = day >= 2 ? day - 2 : day - 2 + 7;
+  const tue = new Date(d);
+  tue.setDate(tue.getDate() - diff);
+  tue.setHours(0, 0, 0, 0);
+  return tue;
 }
 
 function addDays(d: Date, n: number): Date {
@@ -35,7 +36,7 @@ function addDays(d: Date, n: number): Date {
 }
 
 function formatDate(d: Date): string {
-  const y = d.getFullYear();
+  const y = String(d.getFullYear()).slice(2);
   const m = String(d.getMonth() + 1).padStart(2, '0');
   const dd = String(d.getDate()).padStart(2, '0');
   return `${y}.${m}.${dd}`;
@@ -48,7 +49,11 @@ function formatISO(d: Date): string {
   return `${y}-${m}-${dd}`;
 }
 
-const dayNames = ['월', '화', '수', '목', '금', '토', '일'];
+const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+
+function getDayName(d: Date): string {
+  return dayNames[d.getDay()];
+}
 
 interface WeekRange {
   start: Date;
@@ -56,17 +61,15 @@ interface WeekRange {
   label: string;
 }
 
-function generateWeeks(baseMonday: Date, count: number): WeekRange[] {
+function generateWeeks(baseTuesday: Date, count: number): WeekRange[] {
   const weeks: WeekRange[] = [];
   for (let i = 0; i < count; i++) {
-    const start = addDays(baseMonday, i * 7);
-    const end = addDays(start, 6);
-    const startDay = dayNames[start.getDay() === 0 ? 6 : start.getDay() - 1];
-    const endDay = dayNames[end.getDay() === 0 ? 6 : end.getDay() - 1];
+    const start = addDays(baseTuesday, i * 7);
+    const end = addDays(start, 6); // Tuesday + 6 = Monday
     weeks.push({
       start,
       end,
-      label: `${formatDate(start)} (${startDay}) ~ ${formatDate(end)} (${endDay})`,
+      label: `${formatDate(start)} (${getDayName(start)}) ~ ${formatDate(end)} (${getDayName(end)})`,
     });
   }
   return weeks;
@@ -96,7 +99,7 @@ const statusColorMap: Record<string, string> = {
 export default function StatusPage() {
   const navigate = useNavigate();
   const today = new Date();
-  const baseMonday = getMonday(today);
+  const baseTuesday = getTuesday(today);
   const WEEKS_PER_PAGE = 8;
 
   const [pageOffset, setPageOffset] = useState(0);
@@ -114,7 +117,7 @@ export default function StatusPage() {
   }, []);
 
   const weeks = useMemo(
-    () => generateWeeks(addDays(baseMonday, pageOffset * 7 * WEEKS_PER_PAGE), WEEKS_PER_PAGE),
+    () => generateWeeks(addDays(baseTuesday, pageOffset * 7 * WEEKS_PER_PAGE), WEEKS_PER_PAGE),
     [pageOffset],
   );
 
