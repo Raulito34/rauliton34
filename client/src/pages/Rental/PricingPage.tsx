@@ -1,30 +1,30 @@
 import { Link } from 'react-router-dom';
 
 const halls = [
-  { name: '1전시관', floor: '1F', area: '120㎡ (35평)' },
-  { name: '2전시관', floor: '2F', area: '250㎡ (75평)' },
-  { name: '3전시관', floor: '3F', area: '250㎡ (75평)' },
-  { name: '4전시관', floor: '4F', area: '70㎡ (20평)' },
-  { name: 'B1전시관', floor: 'B1F', area: '250㎡ (75평)' },
+  { name: '1F', floor: '1F', area: '120㎡ (35평)' },
+  { name: '2F', floor: '2F', area: '250㎡ (75평)' },
+  { name: '3F', floor: '3F', area: '250㎡ (75평)' },
+  { name: '4F', floor: '4F', area: '70㎡ (20평)' },
+  { name: 'B1F', floor: 'B1F', area: '250㎡ (75평)' },
 ];
 
 const seasons = [
   {
     key: 'offpeak',
     label: '비성수기',
-    period: '1–2월, 7–8월, 12월',
+    period: '1–2월, 7–8월',
     prices: [200, 150, 140, 250, 170],
   },
   {
     key: 'regular',
     label: '일반',
-    period: '3월, 6월, 9월',
+    period: '3–6월, 12월',
     prices: [250, 180, 170, 300, 200],
   },
   {
     key: 'peak',
     label: '성수기',
-    period: '4–5월, 10–11월',
+    period: '9–11월',
     prices: [300, 220, 200, 350, 250],
   },
 ];
@@ -44,7 +44,7 @@ export default function PricingPage() {
           <p className="text-center text-gray-600 text-sm mb-2">
             시즌별 · 전시관별 1주 기준 대관료 안내
           </p>
-          <p className="text-center text-xs text-gray-400 mb-10">(단위: 만원, VAT 별도)</p>
+          <p className="text-center text-xs text-gray-400 mb-10">(VAT 별도)</p>
 
           {/* Season-based pricing - compact single-row layout */}
           <div className="space-y-6">
@@ -65,7 +65,7 @@ export default function PricingPage() {
                         i < halls.length - 1 ? 'border-r border-gray-200' : ''
                       }`}
                     >
-                      <p className="text-[11px] font-bold text-primary leading-tight">{hall.name}</p>
+                      <p className="text-[11px] font-bold text-primary leading-tight">{hall.floor}</p>
                       <p className="text-[9px] text-gray-400 mt-0.5 leading-tight">{hall.area}</p>
                       <p className="text-base font-black text-accent mt-1.5 leading-none">
                         {season.prices[i]}
@@ -88,7 +88,6 @@ export default function PricingPage() {
               <li>비영리 단체 및 신진 작가의 경우 별도 협의가 가능합니다.</li>
               <li>대관료에는 기본 조명, 전기, 냉난방비가 포함되어 있습니다.</li>
               <li>설치/철수 기간은 대관 기간에 포함됩니다.</li>
-              <li>B1F B1전시관은 시간 단위 대관도 가능합니다 (별도 문의).</li>
             </ul>
           </div>
 
