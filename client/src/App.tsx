@@ -12,7 +12,7 @@ import SpaceDetailPage from './pages/Spaces/SpaceDetailPage';
 import RentalPage from './pages/Rental/RentalPage';
 import ProcedurePage from './pages/Rental/ProcedurePage';
 import PricingPage from './pages/Rental/PricingPage';
-import TermsPage from './pages/Rental/TermsPage';
+import VisitorInfoPage from './pages/About/VisitorInfoPage';
 import ApplyPage from './pages/Rental/ApplyPage';
 import StatusPage from './pages/Rental/StatusPage';
 import RentalListPage from './pages/Rental/RentalListPage';
@@ -28,6 +28,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/about/greeting" element={<GreetingPage />} />
+          <Route path="/about/visitor-info" element={<VisitorInfoPage />} />
           <Route path="/about/architecture" element={<ArchitecturePage />} />
           <Route path="/about/location" element={<LocationPage />} />
           <Route path="/exhibition" element={<ExhibitionPage />} />
@@ -37,7 +38,6 @@ function App() {
           <Route path="/rental" element={<RentalPage />} />
           <Route path="/rental/procedure" element={<ProcedurePage />} />
           <Route path="/rental/pricing" element={<PricingPage />} />
-          <Route path="/rental/terms" element={<TermsPage />} />
           <Route path="/rental/apply" element={<ApplyPage />} />
           <Route path="/rental/status" element={<StatusPage />} />
           <Route path="/rental/list" element={<RentalListPage />} />

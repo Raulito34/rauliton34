@@ -7,7 +7,8 @@ const navItems = [
     path: '/about',
     sub: [
       { label: '인사말', path: '/about/greeting' },
-      { label: '건축/공간', path: '/about/architecture' },
+      { label: '관람안내', path: '/about/visitor-info' },
+      { label: '건축', path: '/about/architecture' },
       { label: '오시는 길', path: '/about/location' },
     ],
   },
@@ -37,7 +38,6 @@ const navItems = [
     sub: [
       { label: '대관절차', path: '/rental/procedure' },
       { label: '대관료', path: '/rental/pricing' },
-      { label: '대관규약', path: '/rental/terms' },
       { label: '대관신청', path: '/rental/status' },
       { label: '신청내역', path: '/rental/list' },
     ],
