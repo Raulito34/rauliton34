@@ -13,19 +13,19 @@ const seasons = [
     key: 'offpeak',
     label: '비성수기',
     period: '1–2월, 7–8월',
-    prices: [200, 150, 140, 250, 170],
+    prices: [550, 500, 400, 200, 350],
   },
   {
     key: 'regular',
     label: '일반',
     period: '3–6월, 12월',
-    prices: [250, 180, 170, 300, 200],
+    prices: [500, 450, 350, 150, 300],
   },
   {
     key: 'peak',
     label: '성수기',
     period: '9–11월',
-    prices: [300, 220, 200, 350, 250],
+    prices: [600, 550, 450, 200, 400],
   },
 ];
 

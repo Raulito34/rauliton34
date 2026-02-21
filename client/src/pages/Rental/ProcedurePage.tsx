@@ -3,27 +3,43 @@ import { Link } from 'react-router-dom';
 const steps = [
   {
     num: '01',
-    title: '대관 신청 (현장 답사 필요시 사전 문의)',
-    desc: '온라인 또는 오프라인으로 대관 신청서와 전시 기획안을 제출합니다.',
-    detail: '전시 기획안 포함',
+    title: '대관신청',
+    desc: '온라인 또는 오프라인으로 대관 신청서와 전시 기획안 제안',
   },
   {
     num: '02',
-    title: '심사 및 승인',
-    desc: '전시 기획안에 대한 내부 심사를 거쳐 대관 승인 여부를 결정합니다.',
-    detail: '심사기간: 약 2주',
+    title: '대관승인',
+    desc: '내부 심사를 거쳐 대관 승인 여부를 1주내에 결정',
   },
   {
     num: '03',
-    title: '계약 체결',
-    desc: '대관 조건, 기간, 요금 등에 대한 계약을 체결하고 대관료를 납부합니다.',
-    detail: '계약금 50% 선납',
+    title: '계약서 작성',
+    desc: '전체 대관료의 30%를 계약금으로 납부하여 대관 계약 체결',
   },
   {
     num: '04',
-    title: '전시 진행',
-    desc: '작품 반입, 설치, 전시 운영, 철수까지 선아트센터의 지원을 받으며 진행합니다.',
-    detail: '기술 지원 포함',
+    title: '실무 협의',
+    desc: '자료 업로드, 반입 설치 시간 등 세부 계획 조율',
+  },
+  {
+    num: '05',
+    title: '잔금 납부',
+    desc: '전시 오픈 7일 전까지 납부',
+  },
+  {
+    num: '06',
+    title: '작품 반입, 설치',
+    desc: '화요일 오후 2시부터 작품 반입 가능. 설치 오후 7시까지 가능',
+  },
+  {
+    num: '07',
+    title: '전시',
+    desc: '오전 10:00 ~ 오후 6:00',
+  },
+  {
+    num: '08',
+    title: '전시 철수',
+    desc: '화요일 정오 12시까지 철수 완료',
   },
 ];
 
@@ -39,9 +55,16 @@ export default function ProcedurePage() {
 
       <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4">
-          <p className="text-center text-gray-600 mb-12">
-            선아트센터 대관은 아래 절차에 따라 진행됩니다.
-          </p>
+          {/* Header info */}
+          <div className="mb-12 text-center space-y-2">
+            <p className="text-gray-600 text-sm">현장 답사 필요시 사전문의</p>
+            <div className="bg-light p-4 rounded inline-block">
+              <p className="text-sm text-gray-700">
+                <span className="font-semibold text-primary">계약 체결</span> — 대관 조건, 기간, 요금 등에 대한 계약을 체결 후 대관료 납부
+              </p>
+              <p className="text-xs text-gray-500 mt-1">계약시 30%, 전시 시작 7일 전 잔금 납부</p>
+            </div>
+          </div>
 
           <div className="space-y-0">
             {steps.map((step, idx) => (
@@ -57,9 +80,6 @@ export default function ProcedurePage() {
                 <div className="flex-1 pb-6">
                   <h3 className="text-lg font-bold text-primary">{step.title}</h3>
                   <p className="text-sm text-gray-600 mt-1">{step.desc}</p>
-                  <span className="inline-block text-xs text-accent mt-2 bg-amber-50 px-3 py-1 rounded-full">
-                    {step.detail}
-                  </span>
                 </div>
               </div>
             ))}
@@ -73,7 +93,7 @@ export default function ProcedurePage() {
               대관료 확인
             </Link>
             <Link
-              to="/rental/apply"
+              to="/rental/status"
               className="inline-block bg-accent text-white px-8 py-3 text-sm font-medium hover:bg-accent-light transition-colors"
             >
               대관 신청하기

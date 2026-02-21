@@ -83,8 +83,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold text-primary mb-1">운영시간</h3>
                   <p className="text-sm text-gray-600">
-                    화~일 10:00 - 18:00<br />
-                    월요일 휴관
+                    10:00 ~ 18:00
                   </p>
                 </div>
               </div>
