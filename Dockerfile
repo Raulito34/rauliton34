@@ -5,11 +5,10 @@ RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 
 COPY server/package.json server/package-lock.json ./
+COPY server/prisma ./prisma/
 RUN npm install
 
 COPY server/ ./
-
-RUN npx prisma generate
 
 EXPOSE ${PORT:-4000}
 
