@@ -122,6 +122,45 @@ app.get('/api/rentals/status', async (_req, res) => {
   res.json(rentals);
 });
 
+// User: lookup own bookings by name + email
+app.post('/api/rentals/lookup', async (req, res) => {
+  const { applicantName, email } = req.body;
+  if (!applicantName || !email) {
+    return res.status(400).json({ error: 'applicantName and email are required' });
+  }
+  const rentals = await prisma.rental.findMany({
+    where: { applicantName: String(applicantName), email: String(email) },
+    orderBy: { createdAt: 'desc' },
+  });
+  res.json(rentals);
+});
+
+// User: cancel own booking (verified by email)
+app.post('/api/rentals/:id/cancel', async (req, res) => {
+  const { email } = req.body;
+  const rental = await prisma.rental.findUnique({ where: { id: Number(req.params.id) } });
+  if (!rental) return res.status(404).json({ error: 'Not found' });
+  if (rental.email !== email) return res.status(403).json({ error: 'Email mismatch' });
+  const updated = await prisma.rental.update({
+    where: { id: rental.id },
+    data: { status: 'cancelled' },
+  });
+  res.json(updated);
+});
+
+// User: reschedule own booking (verified by email)
+app.post('/api/rentals/:id/reschedule', async (req, res) => {
+  const { email, startDate, endDate } = req.body;
+  const rental = await prisma.rental.findUnique({ where: { id: Number(req.params.id) } });
+  if (!rental) return res.status(404).json({ error: 'Not found' });
+  if (rental.email !== email) return res.status(403).json({ error: 'Email mismatch' });
+  const updated = await prisma.rental.update({
+    where: { id: rental.id },
+    data: { startDate, endDate, status: 'pending' },
+  });
+  res.json(updated);
+});
+
 // Admin: full rental details
 app.get('/api/rentals', requireAdmin, async (_req, res) => {
   const rentals = await prisma.rental.findMany({

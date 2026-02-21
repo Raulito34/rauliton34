@@ -19,6 +19,7 @@ import RentalListPage from './pages/Rental/RentalListPage';
 import NewsPage from './pages/News/NewsPage';
 import ContactPage from './pages/Contact/ContactPage';
 import AdminHomePage from './pages/Admin/AdminHomePage';
+import AdminRentalPage from './pages/Admin/AdminRentalPage';
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
           <Route path="/news" element={<NewsPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/admin/homepage" element={<AdminHomePage />} />
+          <Route path="/admin/rentals" element={<AdminRentalPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

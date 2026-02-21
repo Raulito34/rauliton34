@@ -89,7 +89,7 @@ export default function Header() {
             >
               <Link
                 to={item.path}
-                className={`px-3 pb-1 text-[10px] font-bold tracking-[0.15em] uppercase transition-colors ${
+                className={`px-4 pb-1 text-lg font-medium tracking-wide transition-colors ${
                   isActive(item.path)
                     ? 'text-black'
                     : 'text-black/40 hover:text-black'

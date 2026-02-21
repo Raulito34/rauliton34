@@ -16,7 +16,7 @@ export default function RentalPage() {
             선아트센터의 전시 공간을 대관하여 여러분의 예술 작품을 선보이세요.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Link to="/rental/procedure" className="group p-8 bg-light rounded hover:shadow-lg transition-shadow text-center">
               <div className="w-14 h-14 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-white text-xl font-bold">01</span>
@@ -33,17 +33,9 @@ export default function RentalPage() {
               <p className="text-sm text-gray-600">공간별, 기간별 대관 요금을 확인하세요.</p>
             </Link>
 
-            <Link to="/rental/terms" className="group p-8 bg-light rounded hover:shadow-lg transition-shadow text-center">
-              <div className="w-14 h-14 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-white text-xl font-bold">03</span>
-              </div>
-              <h3 className="text-lg font-bold text-primary group-hover:text-accent transition-colors mb-2">대관규약</h3>
-              <p className="text-sm text-gray-600">대관 이용에 관한 규약 및 약관입니다.</p>
-            </Link>
-
             <Link to="/rental/status" className="group p-8 bg-light rounded hover:shadow-lg transition-shadow text-center">
               <div className="w-14 h-14 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-white text-xl font-bold">04</span>
+                <span className="text-white text-xl font-bold">03</span>
               </div>
               <h3 className="text-lg font-bold text-primary group-hover:text-accent transition-colors mb-2">대관신청</h3>
               <p className="text-sm text-gray-600">대관 가능 일정을 확인하고 온라인으로 신청하세요.</p>
@@ -51,7 +43,7 @@ export default function RentalPage() {
 
             <Link to="/rental/list" className="group p-8 bg-light rounded hover:shadow-lg transition-shadow text-center">
               <div className="w-14 h-14 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-white text-xl font-bold">05</span>
+                <span className="text-white text-xl font-bold">04</span>
               </div>
               <h3 className="text-lg font-bold text-primary group-hover:text-accent transition-colors mb-2">신청내역</h3>
               <p className="text-sm text-gray-600">대관 신청 내역과 진행 상태를 확인하세요.</p>
