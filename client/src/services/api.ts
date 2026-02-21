@@ -88,6 +88,12 @@ export const api = {
   submitRental: (data: RentalApplication) => postJson<RentalBooking>('/rentals', data),
   getRentals: () => fetchJsonAdmin<RentalBooking[]>('/rentals'),
   getRentalStatuses: () => fetchJson<Pick<RentalBooking, 'id' | 'spaceName' | 'startDate' | 'endDate' | 'status'>[]>('/rentals/status'),
+  lookupRentals: (applicantName: string, email: string) =>
+    postJson<RentalBooking[]>('/rentals/lookup', { applicantName, email }),
+  cancelRental: (id: number, email: string) =>
+    postJson<RentalBooking>(`/rentals/${id}/cancel`, { email }),
+  rescheduleRental: (id: number, email: string, startDate: string, endDate: string) =>
+    postJson<RentalBooking>(`/rentals/${id}/reschedule`, { email, startDate, endDate }),
   verifyAdmin: (code: string) => postJson<{ ok: boolean }>('/admin/verify', { code }),
   updateRentalStatus: (id: number, status: string) => patchJson<RentalBooking>(`/rentals/${id}`, { status }),
   deleteRental: (id: number) => deleteJson(`/rentals/${id}`),

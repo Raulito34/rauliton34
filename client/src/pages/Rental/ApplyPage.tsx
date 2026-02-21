@@ -133,7 +133,7 @@ export default function ApplyPage() {
         <div className="max-w-3xl mx-auto px-4">
           {fromStatus && (
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8 text-sm text-blue-800">
-              대관현황에서 선택한 정보가 자동으로 입력되었습니다. 대관 기간을 아래에서 조정할 수 있습니다.
+              대관현황에서 선택한 정보가 자동으로 입력되었습니다. 기간 변경은 대관신청 페이지에서 다시 선택해주세요.
             </div>
           )}
 
@@ -173,7 +173,8 @@ export default function ApplyPage() {
                   value={form.startDate}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:border-accent"
+                  readOnly={fromStatus}
+                  className={`w-full border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:border-accent ${fromStatus ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                 />
               </div>
               <div>
@@ -186,7 +187,8 @@ export default function ApplyPage() {
                   value={form.endDate}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:border-accent"
+                  readOnly={fromStatus}
+                  className={`w-full border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:border-accent ${fromStatus ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                 />
               </div>
             </div>
