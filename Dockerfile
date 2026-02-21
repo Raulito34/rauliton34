@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY server/package.json server/package-lock.json ./
 COPY server/prisma ./prisma/
-RUN npm install
+RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" npm install
 
 COPY server/ ./
 
