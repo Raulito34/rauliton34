@@ -1,3 +1,11 @@
+FROM node:20-slim AS client-build
+
+WORKDIR /app/client
+COPY client/package.json client/package-lock.json ./
+RUN npm install
+COPY client/ ./
+RUN npm run build
+
 FROM node:20-slim
 
 RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
@@ -9,6 +17,8 @@ COPY server/prisma ./prisma/
 RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" npm install
 
 COPY server/ ./
+
+COPY --from=client-build /app/client/dist ./public
 
 EXPOSE ${PORT:-4000}
 

@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 import { PrismaClient } from '@prisma/client';
 
 const app = express();
@@ -13,6 +14,10 @@ const allowedOrigins = process.env.CLIENT_URL
 
 app.use(cors({ origin: allowedOrigins }));
 app.use(express.json({ limit: '10mb' }));
+
+// Serve static client files
+const publicPath = path.join(__dirname, '..', 'public');
+app.use(express.static(publicPath));
 
 // --- Admin auth middleware ---
 const ADMIN_CODE = process.env.ADMIN_CODE || 'admin1234';
@@ -265,6 +270,11 @@ app.post('/api/contact', async (req, res) => {
     data: { name, email, phone, subject, message },
   });
   res.status(201).json(contact);
+});
+
+// SPA fallback: serve index.html for all non-API routes
+app.get('*', (_req, res) => {
+  res.sendFile(path.join(publicPath, 'index.html'));
 });
 
 app.listen(PORT, () => {
