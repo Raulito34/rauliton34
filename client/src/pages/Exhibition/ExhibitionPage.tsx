@@ -90,13 +90,21 @@ export default function ExhibitionPage() {
   const filtered = exhibitions.filter((e) => e.status === activeTab);
 
   return (
-    <div>
-      {/* Page Header */}
-      <section className="pt-24 pb-16 max-lg:pt-16 max-lg:pb-10">
-        <div className="max-w-[1280px] mx-auto px-12 max-lg:px-6">
-          <h1 className="text-page-title max-lg:text-[32px]">전시안내</h1>
-          <p className="text-[14px] text-[#B0B0B0] mt-3 font-display uppercase tracking-[2px]">Exhibition</p>
-          <div className="thin-divider mt-8" />
+    <div className="bg-[var(--canvas)]">
+      {/* ═══ Page Header ═══ */}
+      <section className="pt-32 pb-16 max-lg:pt-20 max-lg:pb-10">
+        <div className="max-w-[1320px] mx-auto px-12 max-lg:px-6">
+          <div className="grid grid-cols-12 gap-8 max-lg:gap-4">
+            <div className="col-span-1 max-lg:col-span-12">
+              <span className="text-section-num text-[var(--ink-mist)]">Exhibition</span>
+            </div>
+            <div className="col-span-11 max-lg:col-span-12">
+              <h1 className="font-display font-extralight text-[clamp(2.5rem,5vw,4.5rem)] leading-[0.98] tracking-[-0.02em] m-0">
+                전시안내
+              </h1>
+            </div>
+          </div>
+          <div className="h-px bg-[var(--line)] mt-10" />
         </div>
       </section>
 
@@ -228,18 +236,19 @@ export default function ExhibitionPage() {
                       </div>
                       <div className="mt-5">
                         <div className="flex items-center gap-3 mb-2">
-                          <span className={`text-[11px] uppercase tracking-[1px] font-medium ${
-                            ex.status === 'current' ? 'text-[#1A1A1A]' :
-                            ex.status === 'upcoming' ? 'text-[#6B6B6B]' :
-                            'text-[#B0B0B0]'
+                          <span className={`text-[11px] uppercase tracking-[0.1em] font-medium ${
+                            ex.status === 'current' ? 'text-[var(--ink)]' :
+                            ex.status === 'upcoming' ? 'text-[var(--ink-soft)]' :
+                            'text-[var(--ink-mist)]'
                           }`}>
                             {ex.status === 'current' ? '진행중' : ex.status === 'upcoming' ? '예정' : '종료'}
                           </span>
-                          <span className="text-[12px] text-[#B0B0B0]">{ex.floor}</span>
+                          <span className="w-[3px] h-[3px] rounded-full bg-[var(--ink-mist)]" aria-hidden />
+                          <span className="text-[12px] text-[var(--ink-mist)]">{ex.floor}</span>
                         </div>
-                        <h3 className="font-display text-[20px] font-light uppercase tracking-[0.5px]">{ex.title}</h3>
-                        <p className="text-[14px] text-[#6B6B6B] mt-1">{ex.artist}</p>
-                        <p className="text-[13px] text-[#B0B0B0] mt-1">{ex.startDate} — {ex.endDate}</p>
+                        <h3 className="font-display text-[clamp(1.125rem,1.35vw,1.375rem)] font-light leading-[1.15] tracking-[-0.005em]">{ex.title}</h3>
+                        <p className="text-[14px] text-[var(--ink-soft)] mt-2">{ex.artist}</p>
+                        <p className="text-[12px] text-[var(--ink-mist)] mt-1 tabular-nums">{ex.startDate} — {ex.endDate}</p>
                       </div>
                     </Link>
                     {/* Admin controls */}

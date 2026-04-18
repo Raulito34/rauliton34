@@ -6,8 +6,9 @@ import type { NewsItem, SiteImage } from '../../types';
 const DEFAULT_HERO = '/images/building/hero.jpg';
 
 const defaultExhibitions = [
-  { id: 1, title: '빛의 경계', artist: '김현수', floor: '1F 1전시관', period: '2026.02.01 — 2026.03.15', imageUrl: '' },
-  { id: 2, title: '도시의 기억', artist: '이서연', floor: '2F 2전시관', period: '2026.02.10 — 2026.03.20', imageUrl: '' },
+  { id: 1, title: '빛의 경계', artist: '김현수', floor: '1F 1전시관', period: '2026.02.01 — 2026.03.15', status: '진행중', imageUrl: '' },
+  { id: 2, title: '도시의 기억', artist: '이서연', floor: '2F 2전시관', period: '2026.02.10 — 2026.03.20', status: '진행중', imageUrl: '' },
+  { id: 3, title: '종이의 숨', artist: '박지훈', floor: '3F 3전시관', period: '2026.02.20 — 2026.04.05', status: '진행중', imageUrl: '' },
 ];
 
 const spaces = [
@@ -397,12 +398,19 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="mt-6 space-y-2">
-                  <h3 className="font-display text-[clamp(1.25rem,1.5vw,1.625rem)] font-light leading-tight">
+                <div className="mt-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-[11px] font-medium tracking-[0.1em] uppercase text-[var(--ink)]">
+                      {ex.status}
+                    </span>
+                    <span className="w-[3px] h-[3px] rounded-full bg-[var(--ink-mist)]" aria-hidden />
+                    <span className="text-[12px] text-[var(--ink-mist)]">{ex.floor}</span>
+                  </div>
+                  <h3 className="font-display text-[clamp(1.375rem,1.6vw,1.75rem)] font-light leading-[1.1] tracking-[-0.005em]">
                     {ex.title}
                   </h3>
-                  <p className="text-[14px] text-[var(--ink-soft)]">{ex.artist}</p>
-                  <p className="text-[12px] text-[var(--ink-mist)] tracking-wide tabular-nums">{ex.period}</p>
+                  <p className="text-[14px] text-[var(--ink-soft)] mt-2">{ex.artist}</p>
+                  <p className="text-[12px] text-[var(--ink-mist)] mt-1 tabular-nums tracking-wide">{ex.period}</p>
                 </div>
               </Link>
             ))}
