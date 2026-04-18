@@ -149,8 +149,7 @@ export default function LocationPage() {
                 <div>
                   <h3 className="text-xs font-black uppercase tracking-[0.15em] mb-3">운영시간</h3>
                   <div className="text-[13px] font-light text-black/60 leading-relaxed space-y-1">
-                    <p>화요일 ~ 일요일: 10:00 - 18:00</p>
-                    <p>매주 월요일 휴관</p>
+                    <p>매일 10:00 — 18:00</p>
                     <p className="text-[11px] text-black/30 mt-2">* 전시에 따라 운영시간이 변경될 수 있습니다.</p>
                   </div>
                 </div>
