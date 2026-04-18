@@ -18,64 +18,73 @@ export default function ExhibitionDetailPage() {
 
   if (loading) {
     return (
-      <div className="pt-20 text-center py-40">
-        <p className="text-gray-400">전시 정보를 불러오는 중...</p>
+      <div className="text-center py-40">
+        <p className="text-[#B0B0B0] text-[15px]">전시 정보를 불러오는 중...</p>
       </div>
     );
   }
 
   if (!exhibition) {
     return (
-      <div className="pt-20 text-center py-40">
-        <p className="text-gray-500">전시 정보를 찾을 수 없습니다.</p>
-        <Link to="/exhibition" className="text-accent mt-4 inline-block">전시 목록으로 →</Link>
+      <div className="text-center py-40">
+        <p className="text-[#6B6B6B] text-[15px]">전시 정보를 찾을 수 없습니다.</p>
+        <Link to="/exhibition" className="link-underline text-[14px] mt-6 inline-block">
+          전시 목록으로
+        </Link>
       </div>
     );
   }
 
   return (
     <div>
-      <section className="bg-primary text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-4xl font-bold mb-2">{exhibition.title}</h1>
-          <p className="text-gray-400 text-sm">{exhibition.artist}</p>
+      {/* Hero Image */}
+      <section className="relative w-full h-[60vh] min-h-[400px] overflow-hidden">
+        <img
+          src={exhibition.imageUrl}
+          alt={exhibition.title}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-12 max-lg:p-6">
+          <div className="max-w-[1280px] mx-auto">
+            <h1 className="font-display text-[40px] font-light text-[#FAFAF8] uppercase tracking-[0.5px] max-lg:text-[28px]">
+              {exhibition.title}
+            </h1>
+            <p className="text-[16px] text-[rgba(250,250,248,0.7)] mt-2">{exhibition.artist}</p>
+          </div>
         </div>
       </section>
 
-      <section className="py-16 bg-white">
-        <div className="max-w-5xl mx-auto px-4">
-          <img
-            src={exhibition.imageUrl}
-            alt={exhibition.title}
-            className="w-full h-96 object-cover mb-10"
-          />
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-            <div className="bg-light p-4 rounded">
-              <span className="text-xs text-gray-500">작가</span>
-              <p className="font-semibold text-primary">{exhibition.artist}</p>
+      {/* Content */}
+      <section className="py-[80px] max-lg:py-12">
+        <div className="max-w-[960px] mx-auto px-12 max-lg:px-6">
+          {/* Meta */}
+          <div className="grid grid-cols-3 gap-8 mb-16 max-lg:grid-cols-1 max-lg:gap-4">
+            <div>
+              <p className="text-spec-label text-[#B0B0B0] mb-2">작가</p>
+              <p className="text-[16px] text-[#1A1A1A]">{exhibition.artist}</p>
             </div>
-            <div className="bg-light p-4 rounded">
-              <span className="text-xs text-gray-500">기간</span>
-              <p className="font-semibold text-primary">{exhibition.startDate} - {exhibition.endDate}</p>
+            <div>
+              <p className="text-spec-label text-[#B0B0B0] mb-2">기간</p>
+              <p className="text-[16px] text-[#1A1A1A]">{exhibition.startDate} — {exhibition.endDate}</p>
             </div>
-            <div className="bg-light p-4 rounded">
-              <span className="text-xs text-gray-500">장소</span>
-              <p className="font-semibold text-primary">{exhibition.floor}</p>
+            <div>
+              <p className="text-spec-label text-[#B0B0B0] mb-2">장소</p>
+              <p className="text-[16px] text-[#1A1A1A]">{exhibition.floor}</p>
             </div>
           </div>
 
-          <div className="prose max-w-none">
-            <p className="text-gray-600 leading-relaxed">
+          <div className="thin-divider mb-12" />
+
+          {/* Description */}
+          <div className="max-w-[640px]">
+            <p className="text-[16px] text-[#3A3A3A] leading-[1.8]">
               {exhibition.details || exhibition.description}
             </p>
           </div>
 
-          <div className="mt-12 text-center">
-            <Link
-              to="/exhibition"
-              className="text-sm text-accent border-b border-accent pb-1 hover:text-accent-light"
-            >
+          <div className="mt-16">
+            <Link to="/exhibition" className="link-underline text-[14px] text-[#6B6B6B]">
               ← 전시 목록으로
             </Link>
           </div>

@@ -1,103 +1,84 @@
 import { Link } from 'react-router-dom';
 
 const steps = [
-  {
-    num: '01',
-    title: '대관신청',
-    desc: '온라인 또는 오프라인으로 대관 신청서와 전시 기획안 제안',
-  },
-  {
-    num: '02',
-    title: '대관승인',
-    desc: '내부 심사를 거쳐 대관 승인 여부를 1주내에 결정',
-  },
-  {
-    num: '03',
-    title: '계약서 작성',
-    desc: '전체 대관료의 30%를 계약금으로 납부하여 대관 계약 체결',
-  },
-  {
-    num: '04',
-    title: '실무 협의',
-    desc: '자료 업로드, 반입 설치 시간 등 세부 계획 조율',
-  },
-  {
-    num: '05',
-    title: '잔금 납부',
-    desc: '전시 오픈 7일 전까지 납부',
-  },
-  {
-    num: '06',
-    title: '작품 반입, 설치',
-    desc: '화요일 오후 2시부터 작품 반입 가능. 설치 오후 7시까지 가능',
-  },
-  {
-    num: '07',
-    title: '전시',
-    desc: '오전 10:00 ~ 오후 6:00',
-  },
-  {
-    num: '08',
-    title: '전시 철수',
-    desc: '화요일 정오 12시까지 철수 완료',
-  },
+  { num: '01', title: '대관 신청', desc: '온라인 신청서 + 전시 기획안 제출' },
+  { num: '02', title: '대관 승인', desc: '1주 내 심사 · 승인 여부 통보' },
+  { num: '03', title: '계약 체결', desc: '계약금 30% 납부' },
+  { num: '04', title: '실무 협의', desc: '반입 · 설치 일정 조율' },
+  { num: '05', title: '잔금 납부', desc: '오픈 7일 전' },
+  { num: '06', title: '반입 · 설치', desc: '화요일 14:00 — 19:00' },
+  { num: '07', title: '전시', desc: '화 — 일 10:00 — 18:00' },
+  { num: '08', title: '철수', desc: '다음 화요일 12:00 까지' },
 ];
 
 export default function ProcedurePage() {
   return (
-    <div>
-      <section className="bg-primary text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-4xl font-bold mb-2">대관절차</h1>
-          <p className="text-gray-400 text-sm">Rental Procedure</p>
+    <div className="bg-[var(--canvas)]">
+      {/* ═══ Header ═══ */}
+      <section className="pt-32 pb-20 max-lg:pt-20 max-lg:pb-12">
+        <div className="mx-auto max-w-[1320px] px-12 max-lg:px-6">
+          <div className="grid grid-cols-12 gap-8 max-lg:gap-4">
+            <div className="col-span-1 max-lg:col-span-12">
+              <span className="text-section-num text-[var(--ink-mist)]">Procedure</span>
+            </div>
+            <div className="col-span-11 max-lg:col-span-12">
+              <h1 className="font-display font-extralight text-[clamp(2.5rem,5vw,4.5rem)] leading-[0.98] tracking-[-0.02em]">
+                여덟 단계.<br />
+                <span className="text-[var(--ink-mist)]">문의에서 오프닝까지.</span>
+              </h1>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4">
-          {/* Header info */}
-          <div className="mb-12 text-center space-y-2">
-            <p className="text-gray-600 text-sm">현장 답사 필요시 사전문의</p>
-            <div className="bg-light p-4 rounded inline-block">
-              <p className="text-sm text-gray-700">
-                <span className="font-semibold text-primary">계약 체결</span> — 대관 조건, 기간, 요금 등에 대한 계약을 체결 후 대관료 납부
-              </p>
-              <p className="text-xs text-gray-500 mt-1">계약시 30%, 전시 시작 7일 전 잔금 납부</p>
-            </div>
-          </div>
-
-          <div className="space-y-0">
-            {steps.map((step, idx) => (
-              <div key={step.num} className="relative flex gap-6 pb-10">
-                {/* Timeline line */}
-                {idx < steps.length - 1 && (
-                  <div className="absolute left-6 top-14 w-0.5 h-full bg-gray-200" />
-                )}
-                {/* Step number circle */}
-                <div className="w-12 h-12 rounded-full bg-accent text-white flex items-center justify-center font-bold text-sm flex-shrink-0 relative z-10">
-                  {step.num}
-                </div>
-                <div className="flex-1 pb-6">
-                  <h3 className="text-lg font-bold text-primary">{step.title}</h3>
-                  <p className="text-sm text-gray-600 mt-1">{step.desc}</p>
+      {/* ═══ Steps — Minimal Timeline ═══ */}
+      <section className="pb-24 max-lg:pb-16">
+        <div className="mx-auto max-w-[900px] px-12 max-lg:px-6">
+          <div className="border-t border-[var(--line)]">
+            {steps.map((s) => (
+              <div
+                key={s.num}
+                className="group flex items-start gap-10 max-lg:gap-5 py-7 max-lg:py-5 border-b border-[var(--line)] transition-colors duration-300 hover:bg-[var(--canvas-warm)] px-4 max-lg:px-2 -mx-4 max-lg:-mx-2"
+                style={{ transitionTimingFunction: 'var(--ease-out-quart)' }}
+              >
+                <span className="font-display text-[clamp(1.5rem,2.5vw,2.25rem)] font-extralight text-[var(--ink-faint)] tabular-nums leading-none pt-1 min-w-[3.5rem] max-lg:min-w-[2.5rem] group-hover:text-[var(--ink-mist)] transition-colors">
+                  {s.num}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-display text-[clamp(1.125rem,1.5vw,1.375rem)] font-light tracking-tight mb-2">
+                    {s.title}
+                  </h3>
+                  <p className="text-[14px] text-[var(--ink-soft)] leading-relaxed">
+                    {s.desc}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="text-center mt-12 space-x-4">
-            <Link
-              to="/rental/pricing"
-              className="inline-block bg-light text-primary px-8 py-3 text-sm font-medium hover:bg-gray-200 transition-colors"
-            >
-              대관료 확인
-            </Link>
-            <Link
-              to="/rental/status"
-              className="inline-block bg-accent text-white px-8 py-3 text-sm font-medium hover:bg-accent-light transition-colors"
-            >
-              대관 신청하기
-            </Link>
+          {/* Notes */}
+          <div className="mt-16 max-lg:mt-10 p-8 max-lg:p-6 bg-[var(--canvas-warm)] border border-[var(--line)]">
+            <div className="text-spec-label text-[var(--ink-mist)] mb-4">Notes</div>
+            <ul className="space-y-2 text-[14px] text-[var(--ink-soft)] leading-relaxed">
+              <li>· 현장 답사는 사전 문의 후 가능합니다</li>
+              <li>· 계약 체결 시 대관료의 30%, 오픈 7일 전 잔금 납부</li>
+              <li>· 신청서 검토 후 1주 이내 결과를 안내드립니다</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ CTA ═══ */}
+      <section className="pb-32 max-lg:pb-20">
+        <div className="mx-auto max-w-[1320px] px-12 max-lg:px-6">
+          <div className="flex flex-wrap items-center justify-between gap-6 py-12 max-lg:py-8 border-t border-[var(--line)]">
+            <p className="text-[15px] text-[var(--ink-soft)]">
+              다음 단계 — 요금 확인 또는 바로 신청
+            </p>
+            <div className="flex gap-3">
+              <Link to="/rental/pricing" className="btn-outline">대관료</Link>
+              <Link to="/rental/status" className="btn-primary"><span>신청하기</span></Link>
+            </div>
           </div>
         </div>
       </section>

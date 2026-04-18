@@ -3,9 +3,9 @@ import { api, getAdminCode, setAdminCode } from '../../services/api';
 import type { SiteImage } from '../../types';
 
 const DEFAULT_IMAGES: Record<string, string> = {
-  hero: 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1920',
-  exhibition_1: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800',
-  exhibition_2: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=800',
+  hero: '/images/building/hero.jpg',
+  exhibition_1: '',
+  exhibition_2: '',
 };
 
 const IMAGE_LABELS: Record<string, string> = {

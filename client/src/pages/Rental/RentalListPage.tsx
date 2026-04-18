@@ -15,18 +15,25 @@ function formatDate(iso: string): string {
 const statusLabel: Record<string, string> = {
   pending: '심사중',
   reviewing: '심사중',
-  approved: '대관완료',
-  confirmed: '대관완료',
+  approved: '확정',
+  confirmed: '확정',
   cancelled: '취소됨',
 };
 
-const statusStyle: Record<string, string> = {
-  pending: 'bg-orange-100 text-orange-700 border-orange-200',
-  reviewing: 'bg-orange-100 text-orange-700 border-orange-200',
-  approved: 'bg-green-100 text-green-700 border-green-200',
-  confirmed: 'bg-green-100 text-green-700 border-green-200',
-  cancelled: 'bg-gray-100 text-gray-500 border-gray-200',
+// Monochromatic status — opacity + border variation, no chromatic colors
+const statusStyle: Record<string, { dot: string; text: string }> = {
+  pending:   { dot: 'oklch(62% 0.10 60)',  text: 'var(--ink)' },
+  reviewing: { dot: 'oklch(62% 0.10 60)',  text: 'var(--ink)' },
+  approved:  { dot: 'oklch(55% 0.12 145)', text: 'var(--ink)' },
+  confirmed: { dot: 'oklch(55% 0.12 145)', text: 'var(--ink)' },
+  cancelled: { dot: 'var(--ink-faint)',    text: 'var(--ink-mist)' },
 };
+
+const inputCls = `
+  w-full bg-transparent border-0 border-b border-[var(--line-strong)]
+  px-0 py-3 text-[15px] text-[var(--ink)] placeholder:text-[var(--ink-faint)]
+  focus:outline-none focus:border-[var(--ink)] transition-colors
+`;
 
 export default function RentalListPage() {
   const navigate = useNavigate();
@@ -57,7 +64,7 @@ export default function RentalListPage() {
   };
 
   const handleCancel = async (id: number) => {
-    if (!confirm('정말로 이 신청을 취소하시겠습니까?')) return;
+    if (!confirm('이 신청을 취소하시겠습니까?')) return;
     setCancelling(id);
     try {
       await api.cancelRental(id, email);
@@ -79,173 +86,215 @@ export default function RentalListPage() {
     navigate(`/rental/status?${params.toString()}`);
   };
 
-  const selectedBooking = bookings?.find((b) => b.id === selectedId);
-
   return (
-    <div>
-      <section className="bg-primary text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-4xl font-bold mb-2">신청내역</h1>
-          <p className="text-gray-400 text-sm">My Applications</p>
+    <div className="bg-[var(--canvas)] min-h-screen">
+      {/* ═══ Header ═══ */}
+      <section className="pt-32 pb-12 max-lg:pt-20 max-lg:pb-8">
+        <div className="mx-auto max-w-[1320px] px-12 max-lg:px-6">
+          <div className="grid grid-cols-12 gap-8 max-lg:gap-4">
+            <div className="col-span-1 max-lg:col-span-12">
+              <span className="text-section-num text-[var(--ink-mist)]">Bookings</span>
+            </div>
+            <div className="col-span-11 max-lg:col-span-12">
+              <h1 className="font-display font-extralight text-[clamp(2.5rem,5vw,4.5rem)] leading-[0.98] tracking-[-0.02em]">
+                신청 내역.
+              </h1>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4">
-          {/* Lookup form */}
-          {bookings === null && (
-            <div className="max-w-sm mx-auto">
-              <p className="text-center text-gray-600 text-sm mb-8">
-                대관 신청 시 입력한 신청자명과 이메일로 조회하세요.
+      {/* ═══ Lookup Form ═══ */}
+      {bookings === null && (
+        <section className="pb-32 max-lg:pb-20">
+          <div className="mx-auto max-w-[480px] px-12 max-lg:px-6">
+            <div className="border-t border-[var(--line)] pt-10">
+              <p className="text-[13px] text-[var(--ink-mist)] mb-10 leading-relaxed">
+                신청 시 입력한 이름과 이메일로 조회합니다.
               </p>
-              <form onSubmit={handleLookup} className="space-y-4">
+
+              <form onSubmit={handleLookup} className="space-y-10">
                 <div>
-                  <label className="block text-sm font-medium text-primary mb-1">신청자명</label>
+                  <label className="block text-spec-label text-[var(--ink-mist)] mb-3">Name</label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
                     placeholder="홍길동"
-                    className="w-full border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:border-accent"
+                    className={inputCls}
                   />
                 </div>
+
                 <div>
-                  <label className="block text-sm font-medium text-primary mb-1">이메일</label>
+                  <label className="block text-spec-label text-[var(--ink-mist)] mb-3">Email</label>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     placeholder="example@email.com"
-                    className="w-full border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:border-accent"
+                    className={inputCls}
                   />
                 </div>
-                {error && <p className="text-red-500 text-sm">{error}</p>}
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full bg-accent text-white py-3 text-sm font-medium hover:bg-accent-light transition-colors disabled:opacity-50"
-                >
-                  {loading ? '조회 중...' : '조회하기'}
-                </button>
+
+                {error && (
+                  <div className="p-4 border-l-2 border-[var(--ink)] bg-[var(--canvas-warm)] text-[13px] text-[var(--ink-soft)]">
+                    {error}
+                  </div>
+                )}
+
+                <div className="pt-6 flex items-center justify-between gap-4">
+                  <Link to="/rental" className="text-[12px] tracking-[0.1em] uppercase text-[var(--ink-mist)] hover:text-[var(--ink)] transition-colors">
+                    ← 돌아가기
+                  </Link>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="btn-primary disabled:opacity-50"
+                  >
+                    <span>{loading ? '조회 중 ...' : '조회'}</span>
+                  </button>
+                </div>
               </form>
             </div>
-          )}
+          </div>
+        </section>
+      )}
 
-          {/* Results */}
-          {bookings !== null && (
-            <>
-              <div className="flex items-center justify-between mb-6">
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium text-primary">{name}</span>님의 신청 내역 ({bookings.length}건)
-                </p>
-                <button
-                  onClick={() => { setBookings(null); setError(''); }}
-                  className="text-xs text-gray-400 hover:text-gray-600 border border-gray-200 px-3 py-1.5 rounded transition-colors"
-                >
-                  다시 조회
-                </button>
+      {/* ═══ Results ═══ */}
+      {bookings !== null && (
+        <section className="pb-32 max-lg:pb-20">
+          <div className="mx-auto max-w-[1000px] px-12 max-lg:px-6">
+            {/* Results header */}
+            <div className="flex flex-wrap items-baseline justify-between gap-4 py-6 border-t border-b border-[var(--line)] mb-0">
+              <div>
+                <span className="text-spec-label text-[var(--ink-mist)]">{name}</span>
+                <span className="ml-4 font-display text-[18px] font-light tabular-nums">
+                  {bookings.length} 건
+                </span>
               </div>
+              <button
+                onClick={() => { setBookings(null); setError(''); }}
+                className="text-[12px] tracking-[0.1em] uppercase text-[var(--ink-mist)] hover:text-[var(--ink)] transition-colors"
+              >
+                다시 조회
+              </button>
+            </div>
 
-              {bookings.length === 0 ? (
-                <div className="text-center py-20">
-                  <p className="text-gray-400 mb-4">신청 내역이 없습니다.</p>
-                  <Link
-                    to="/rental/status"
-                    className="text-accent hover:text-accent-light text-sm font-medium underline underline-offset-4"
-                  >
-                    대관 신청하러 가기
-                  </Link>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {bookings.map((b) => (
+            {bookings.length === 0 ? (
+              <div className="text-center py-32">
+                <p className="text-[15px] text-[var(--ink-mist)] mb-8">신청 내역이 없습니다.</p>
+                <Link to="/rental/status" className="btn-primary"><span>대관 신청하기</span></Link>
+              </div>
+            ) : (
+              <div>
+                {bookings.map((b) => {
+                  const isOpen = selectedId === b.id;
+                  const status = statusStyle[b.status] || statusStyle.pending;
+                  return (
                     <div
                       key={b.id}
-                      className={`border rounded-lg transition-all ${
-                        selectedId === b.id ? 'border-accent shadow-md' : 'border-gray-200 hover:border-gray-300'
-                      }`}
+                      className="border-b border-[var(--line)] group transition-colors"
                     >
                       <button
-                        onClick={() => setSelectedId(selectedId === b.id ? null : b.id)}
-                        className="w-full text-left px-6 py-4 flex flex-wrap items-center gap-4"
+                        onClick={() => setSelectedId(isOpen ? null : b.id)}
+                        className="w-full text-left py-6 max-lg:py-5 hover:bg-[var(--canvas-warm)]/50 transition-colors px-4 max-lg:px-2 -mx-4 max-lg:-mx-2"
+                        aria-expanded={isOpen}
                       >
-                        <span className={`text-xs font-medium px-2.5 py-1 rounded border ${statusStyle[b.status] || statusStyle.pending}`}>
-                          {statusLabel[b.status] || b.status}
-                        </span>
-                        <span className="font-medium text-primary text-sm">{b.spaceName}</span>
-                        <span className="text-sm text-gray-500">
-                          {formatDate(b.startDate)} ~ {formatDate(b.endDate)}
-                        </span>
-                        <svg
-                          className={`w-4 h-4 text-gray-400 transition-transform ml-auto ${selectedId === b.id ? 'rotate-180' : ''}`}
-                          fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
+                        <div className="flex items-center gap-6 max-lg:gap-3 flex-wrap">
+                          {/* Status indicator */}
+                          <div className="flex items-center gap-2 min-w-[80px]">
+                            <span
+                              className="w-2 h-2 rounded-full"
+                              style={{ backgroundColor: status.dot }}
+                            />
+                            <span className="text-[12px] tracking-[0.08em] uppercase font-medium" style={{ color: status.text }}>
+                              {statusLabel[b.status] || b.status}
+                            </span>
+                          </div>
+
+                          {/* Space name */}
+                          <div className="flex-1 min-w-0">
+                            <div className="font-display text-[clamp(1rem,1.3vw,1.25rem)] font-light">
+                              {b.spaceName}
+                            </div>
+                          </div>
+
+                          {/* Dates */}
+                          <div className="text-[13px] text-[var(--ink-soft)] tabular-nums font-display tracking-wide">
+                            {formatDate(b.startDate)} — {formatDate(b.endDate)}
+                          </div>
+
+                          {/* Expand */}
+                          <span
+                            className="font-display text-[18px] text-[var(--ink-faint)] transition-transform duration-300"
+                            style={{ transform: isOpen ? 'rotate(90deg)' : 'rotate(0)' }}
+                            aria-hidden
+                          >
+                            →
+                          </span>
+                        </div>
                       </button>
 
-                      {selectedId === b.id && selectedBooking && (
-                        <div className="border-t border-gray-100 px-6 py-5 bg-gray-50/50">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-sm">
-                            <div>
-                              <span className="text-gray-400 block mb-1">희망 공간</span>
-                              <span className="text-primary font-medium">{selectedBooking.spaceName}</span>
-                            </div>
-                            <div>
-                              <span className="text-gray-400 block mb-1">대관 기간</span>
-                              <span className="text-primary">
-                                {formatDate(selectedBooking.startDate)} ~ {formatDate(selectedBooking.endDate)}
-                              </span>
-                            </div>
-                            <div>
-                              <span className="text-gray-400 block mb-1">전시/행사 목적</span>
-                              <span className="text-primary">{selectedBooking.purpose || '-'}</span>
-                            </div>
-                            <div>
-                              <span className="text-gray-400 block mb-1">상태</span>
-                              <span className={`text-xs font-medium px-2.5 py-1 rounded border ${statusStyle[selectedBooking.status] || statusStyle.pending}`}>
-                                {statusLabel[selectedBooking.status] || selectedBooking.status}
-                              </span>
-                            </div>
-                            {selectedBooking.message && (
-                              <div className="md:col-span-2">
-                                <span className="text-gray-400 block mb-1">상세 내용</span>
-                                <p className="text-primary whitespace-pre-wrap bg-white rounded p-3 border border-gray-200">
-                                  {selectedBooking.message}
+                      {/* Expanded detail */}
+                      {isOpen && (
+                        <div className="pb-10 max-lg:pb-6 pt-2">
+                          <div className="grid grid-cols-2 max-lg:grid-cols-1 gap-x-12 gap-y-6 py-8 px-4 max-lg:px-2 bg-[var(--canvas-warm)]">
+                            <DetailField label="Space" value={b.spaceName} />
+                            <DetailField
+                              label="Period"
+                              value={`${formatDate(b.startDate)} — ${formatDate(b.endDate)}`}
+                            />
+                            <DetailField label="Purpose" value={b.purpose || '—'} />
+                            <DetailField label="Status" value={statusLabel[b.status] || b.status} />
+
+                            {b.message && (
+                              <div className="col-span-2 max-lg:col-span-1">
+                                <div className="text-spec-label text-[var(--ink-mist)] mb-3">Message</div>
+                                <p className="text-[14px] text-[var(--ink-soft)] leading-relaxed whitespace-pre-wrap border-l border-[var(--line-strong)] pl-4">
+                                  {b.message}
                                 </p>
                               </div>
                             )}
                           </div>
 
-                          {selectedBooking.status !== 'cancelled' && (
-                            <div className="flex flex-wrap items-center gap-3 mt-6 pt-4 border-t border-gray-200">
+                          {b.status !== 'cancelled' && (
+                            <div className="flex flex-wrap items-center gap-3 mt-6 max-lg:mt-4 px-4 max-lg:px-2">
                               <button
-                                onClick={() => handleReschedule(selectedBooking)}
-                                className="text-xs px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                                onClick={() => handleReschedule(b)}
+                                className="btn-outline"
                               >
                                 일정 변경
                               </button>
                               <button
-                                onClick={() => handleCancel(selectedBooking.id)}
-                                disabled={cancelling === selectedBooking.id}
-                                className="text-xs px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded hover:bg-red-100 transition-colors disabled:opacity-50"
+                                onClick={() => handleCancel(b.id)}
+                                disabled={cancelling === b.id}
+                                className="text-[12px] tracking-[0.1em] uppercase text-[var(--ink-mist)] hover:text-[var(--ink)] border-b border-[var(--line-strong)] pb-1 transition-colors disabled:opacity-50"
                               >
-                                {cancelling === selectedBooking.id ? '취소 중...' : '신청 취소'}
+                                {cancelling === b.id ? '취소 중 ...' : '신청 취소'}
                               </button>
                             </div>
                           )}
                         </div>
                       )}
                     </div>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      </section>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+    </div>
+  );
+}
+
+function DetailField({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <div className="text-spec-label text-[var(--ink-mist)] mb-2">{label}</div>
+      <div className="text-[15px] text-[var(--ink)] leading-relaxed">{value}</div>
     </div>
   );
 }
