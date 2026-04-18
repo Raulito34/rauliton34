@@ -9,7 +9,7 @@ export function getAdminCode(): string | null {
 }
 
 export function setAdminCode(code: string) {
-  sessionStorage.setItem('adminCode', code);
+  sessionStorage.setItem('adminCode', code.trim());
 }
 
 export function clearAdminCode() {
@@ -94,7 +94,7 @@ export const api = {
     postJson<RentalBooking>(`/rentals/${id}/cancel`, { email }),
   rescheduleRental: (id: number, email: string, startDate: string, endDate: string) =>
     postJson<RentalBooking>(`/rentals/${id}/reschedule`, { email, startDate, endDate }),
-  verifyAdmin: (code: string) => postJson<{ ok: boolean }>('/admin/verify', { code }),
+  verifyAdmin: (code: string) => postJson<{ ok: boolean }>('/admin/verify', { code: code.trim() }),
   updateRentalStatus: (id: number, status: string) => patchJson<RentalBooking>(`/rentals/${id}`, { status }),
   deleteRental: (id: number) => deleteJson(`/rentals/${id}`),
   getNews: (category?: string) =>
