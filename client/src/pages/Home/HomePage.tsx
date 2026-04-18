@@ -438,8 +438,8 @@ export default function HomePage() {
                 <a href="tel:02-734-0458" className="block font-display text-[clamp(1.25rem,1.6vw,1.75rem)] font-light tabular-nums hover:text-[var(--ink-soft)] transition-colors">
                   02 · 734 · 0458
                 </a>
-                <a href="mailto:info@sunartcenter.com" className="block text-[14px] text-[var(--ink-soft)] link-underline">
-                  info@sunartcenter.com
+                <a href="mailto:info@sunartcenter.co.kr" className="block text-[14px] text-[var(--ink-soft)] link-underline">
+                  info@sunartcenter.co.kr
                 </a>
               </div>
             </div>

@@ -29,7 +29,7 @@ export default function Footer() {
             <p className="text-spec-label text-[rgba(250,250,248,0.4)] mb-4">Contact</p>
             <p className="text-[14px] leading-relaxed">
               02-734-0458<br />
-              info@sunartcenter.com
+              info@sunartcenter.co.kr
             </p>
           </div>
           <div>
