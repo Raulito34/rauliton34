@@ -164,7 +164,7 @@ export default function LocationPage() {
                   <p className="text-[13px] font-light text-black/60 leading-relaxed">
                     전화: 02-000-0000<br />
                     팩스: 02-000-0001<br />
-                    이메일: info@sunartcenter.com
+                    이메일: info@sunartcenter.co.kr
                   </p>
                 </div>
                 <div>

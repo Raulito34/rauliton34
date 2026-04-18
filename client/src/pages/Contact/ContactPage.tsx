@@ -68,7 +68,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <p className="text-spec-label text-[#B0B0B0] mb-3">이메일</p>
-                  <p className="text-[16px] text-[#1A1A1A]">info@sunartcenter.com</p>
+                  <p className="text-[16px] text-[#1A1A1A]">info@sunartcenter.co.kr</p>
                 </div>
                 <div>
                   <p className="text-spec-label text-[#B0B0B0] mb-3">주소</p>
