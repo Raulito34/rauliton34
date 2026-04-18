@@ -22,8 +22,7 @@ export default function Footer() {
           <div>
             <p className="text-spec-label text-[rgba(250,250,248,0.4)] mb-4">Hours</p>
             <p className="text-[14px] leading-relaxed">
-              화 — 일 10:00 ~ 18:00<br />
-              <span className="text-[rgba(250,250,248,0.4)]">월요일 휴관</span>
+              매일 10:00 — 18:00
             </p>
           </div>
           <div>

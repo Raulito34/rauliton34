@@ -12,11 +12,11 @@ const defaultExhibitions = [
 ];
 
 const spaces = [
-  { floor: 'b1f', label: 'B1', name: 'B1 전시관', nameEn: 'Underground Hall', area: '250㎡', pyeong: '75평', height: '2.6M', character: '완전 차광 블랙박스', tags: ['Media Art', 'Immersive', 'Video', 'Sound'] },
-  { floor: '1f',  label: '01', name: '1 전시관', nameEn: 'Street Level',     area: '120㎡', pyeong: '35평', height: '3.0M', character: '인사동 유리 파사드', tags: ['Painting', 'Sculpture', 'Vitrine', '24H Street'] },
-  { floor: '2f',  label: '02', name: '2 전시관', nameEn: 'White Cube',        area: '250㎡', pyeong: '75평', height: '2.6M', character: '시멘트 · 화이트 월', tags: ['Painting', 'Photography', 'Contemporary'] },
-  { floor: '3f',  label: '03', name: '3 전시관', nameEn: 'Divisible Studio',  area: '250㎡', pyeong: '75평', height: '2.6M', character: '분할 가능', tags: ['Group Show', 'Installation', 'Large Scale'] },
-  { floor: '4f',  label: '04', name: '4 전시관', nameEn: 'High Ceiling',      area: '70㎡',  pyeong: '20평', height: '4.3M', character: '4.3M 하이 실링', tags: ['Sculpture', 'Solo Show', 'Installation'] },
+  { floor: 'b1f', label: 'B1', name: 'B1 전시관', area: '250㎡', pyeong: '75평', height: '2.6M' },
+  { floor: '1f',  label: '01', name: '1 전시관',  area: '120㎡', pyeong: '35평', height: '3.0M' },
+  { floor: '2f',  label: '02', name: '2 전시관',  area: '250㎡', pyeong: '75평', height: '2.6M' },
+  { floor: '3f',  label: '03', name: '3 전시관',  area: '250㎡', pyeong: '75평', height: '2.6M' },
+  { floor: '4f',  label: '04', name: '4 전시관',  area: '70㎡',  pyeong: '20평', height: '4.3M' },
 ];
 
 /* ══════════════════════════════════════════════════════
@@ -51,12 +51,9 @@ function useOpenStatus() {
     const tick = () => {
       const now = new Date();
       const seoul = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Seoul' }));
-      const day = seoul.getDay();
       const hour = seoul.getHours();
       const minute = seoul.getMinutes();
-      const openWeekday = day >= 1 && day <= 6;
-      const openHour = hour >= 10 && hour < 18;
-      setIsOpen(openWeekday && openHour);
+      setIsOpen(hour >= 10 && hour < 18);
       setClock(`${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`);
     };
     tick();
@@ -116,7 +113,7 @@ export default function HomePage() {
       {/* ══════════════════════════════════════════════════════
           01 · HERO — KINETIC EDITORIAL
           ══════════════════════════════════════════════════════ */}
-      <section className="relative w-full min-h-[calc(100vh-72px)] flex flex-col overflow-hidden">
+      <section className="relative w-full min-h-[78vh] max-lg:min-h-[72vh] flex flex-col overflow-hidden">
         {/* Background image */}
         <img
           alt="Sun Art Center"
@@ -142,7 +139,7 @@ export default function HomePage() {
         </div>
 
         {/* Kinetic headline */}
-        <div className="relative z-10 flex-1 flex items-end px-12 max-lg:px-6 pb-20 max-lg:pb-14">
+        <div className="relative z-10 flex-1 flex items-end px-12 max-lg:px-6 pb-14 max-lg:pb-10">
           <div className="mx-auto max-w-[1320px] w-full">
             <h1 className="text-mega text-[#FAFAF8] leading-[0.88]">
               <span className="hero-word-mask"><span style={{ '--delay': '100ms' } as React.CSSProperties}>Art</span></span>{' '}
@@ -172,47 +169,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════
-          02 · PHILOSOPHY — EDITORIAL MANIFESTO
-          ══════════════════════════════════════════════════════ */}
-      <section className="relative py-32 max-lg:py-20 bg-[var(--canvas)]">
-        <div className="mx-auto max-w-[1320px] px-12 max-lg:px-6">
-          <div className="grid grid-cols-12 gap-8 max-lg:gap-4">
-            <div className="col-span-1 max-lg:col-span-12">
-              <RevealSection variant="reveal-up">
-                <span className="text-section-num text-[var(--ink-mist)]">01</span>
-              </RevealSection>
-            </div>
-            <div className="col-span-11 max-lg:col-span-12">
-              <RevealSection variant="reveal-up">
-                <p
-                  className="font-display font-extralight text-[clamp(2rem,4vw,3.75rem)] leading-[1.15] tracking-[-0.015em]"
-                  style={{ color: 'var(--ink)' }}
-                >
-                  <span className="text-[var(--ink-mist)]">— </span>
-                  인사동의 작은 미술관,<br />
-                  작품을 위한 다섯 개의 공간.
-                </p>
-              </RevealSection>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ══════════════════════════════════════════════════════
           03 · FLOOR NAVIGATOR — SIGNATURE
           ══════════════════════════════════════════════════════ */}
-      <section className="relative py-32 max-lg:py-20 bg-[var(--void)] text-[var(--snow)] overflow-hidden">
+      <section className="relative py-20 max-lg:py-14 bg-[var(--void)] text-[var(--snow)] overflow-hidden">
         {/* Ambient gradient accent */}
         <div className="absolute inset-0 pointer-events-none opacity-40"
              style={{ background: 'radial-gradient(ellipse 50% 40% at 75% 30%, oklch(30% 0.02 80 / 0.7), transparent)' }} />
 
         <div className="relative mx-auto max-w-[1320px] px-12 max-lg:px-6">
           {/* Section header */}
-          <div className="grid grid-cols-12 gap-8 mb-16 max-lg:mb-10">
+          <div className="grid grid-cols-12 gap-8 mb-10 max-lg:mb-8">
             <div className="col-span-1 max-lg:col-span-12">
               <RevealSection variant="reveal-up">
-                <span className="text-section-num" style={{ color: 'var(--snow-soft)' }}>02</span>
+                <span className="text-section-num" style={{ color: 'var(--snow-soft)' }}>01</span>
               </RevealSection>
             </div>
             <div className="col-span-11 max-lg:col-span-12">
@@ -224,10 +195,10 @@ export default function HomePage() {
             </div>
           </div>
 
-          <RevealSection variant="line-draw-light" className="mb-12" />
+          <RevealSection variant="line-draw-light" className="mb-8" />
 
           {/* Floor split view */}
-          <div className="grid grid-cols-12 gap-0 lg:gap-12 lg:h-[640px] max-lg:gap-6">
+          <div className="grid grid-cols-12 gap-0 lg:gap-10 lg:h-[480px] max-lg:gap-6">
             {/* Image panel */}
             <div className="col-span-5 max-lg:col-span-12 relative overflow-hidden max-lg:aspect-[4/3] max-lg:mb-8">
               {spaces.map((s, i) => (
@@ -249,10 +220,6 @@ export default function HomePage() {
               {/* Image overlay with floor context */}
               <div className="absolute inset-0 pointer-events-none"
                    style={{ background: 'linear-gradient(to top, oklch(10% 0.005 80 / 0.6), transparent 35%)' }} />
-              <div className="absolute bottom-5 left-5 right-5 text-[rgba(250,250,248,0.75)] text-[11px] tracking-[0.18em] uppercase flex justify-between items-end">
-                <span>{spaces[activeFloor].nameEn}</span>
-                <span>{spaces[activeFloor].character}</span>
-              </div>
               {/* Huge floor label */}
               <div className="absolute top-4 right-5 pointer-events-none select-none">
                 <span className="font-display font-extralight text-[clamp(5rem,8vw,8rem)] leading-none text-[rgba(250,250,248,0.08)]">
@@ -292,20 +259,14 @@ export default function HomePage() {
 
                         {/* Content */}
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-baseline gap-4 mb-1">
-                            <h3 className="font-display text-[clamp(1.25rem,1.5vw,1.625rem)] font-light tracking-tight"
-                                style={{ color: active ? 'var(--snow)' : 'oklch(97% 0.004 80 / 0.48)' }}>
-                              {s.name}
-                            </h3>
-                            <span className="text-spec-label" style={{ color: 'oklch(97% 0.004 80 / 0.3)' }}>
-                              {s.nameEn}
-                            </span>
-                          </div>
+                          <h3 className="font-display text-[clamp(1.25rem,1.5vw,1.625rem)] font-light tracking-tight mb-2"
+                              style={{ color: active ? 'var(--snow)' : 'oklch(97% 0.004 80 / 0.48)' }}>
+                            {s.name}
+                          </h3>
                           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px] tracking-wide"
                                style={{ color: active ? 'rgba(250,250,248,0.55)' : 'rgba(250,250,248,0.3)' }}>
                             <span className="tabular-nums">{s.area} · {s.pyeong}</span>
                             <span className="tabular-nums">H {s.height}</span>
-                            <span className="hidden lg:inline">{s.character}</span>
                           </div>
                         </div>
 
@@ -329,7 +290,7 @@ export default function HomePage() {
           </div>
 
           {/* CTA */}
-          <div className="mt-16 max-lg:mt-10 flex justify-end">
+          <div className="mt-10 max-lg:mt-8 flex justify-end">
             <Link to="/spaces" className="btn-ghost"><span>공간 전체 보기</span></Link>
           </div>
         </div>
@@ -338,12 +299,12 @@ export default function HomePage() {
       {/* ══════════════════════════════════════════════════════
           04 · EXHIBITIONS — HORIZONTAL SCROLL
           ══════════════════════════════════════════════════════ */}
-      <section className="relative py-32 max-lg:py-20 bg-[var(--canvas)] overflow-hidden">
+      <section className="relative py-20 max-lg:py-14 bg-[var(--canvas)] overflow-hidden">
         <div className="mx-auto max-w-[1320px] px-12 max-lg:px-6">
-          <div className="grid grid-cols-12 gap-8 mb-12 items-end">
+          <div className="grid grid-cols-12 gap-8 mb-8 items-end">
             <div className="col-span-8 max-lg:col-span-12">
               <RevealSection variant="reveal-up">
-                <span className="text-section-num text-[var(--ink-mist)]">03</span>
+                <span className="text-section-num text-[var(--ink-mist)]">02</span>
               </RevealSection>
               <RevealSection variant="reveal-up">
                 <h2 className="text-page-title mt-4">
@@ -359,7 +320,7 @@ export default function HomePage() {
               </RevealSection>
             </div>
           </div>
-          <RevealSection variant="line-draw" className="mb-16" />
+          <RevealSection variant="line-draw" className="mb-10" />
         </div>
 
         {/* Horizontal scroll */}
@@ -421,43 +382,42 @@ export default function HomePage() {
       {/* ══════════════════════════════════════════════════════
           05 · BENTO GRID — LIVE INFO MOSAIC
           ══════════════════════════════════════════════════════ */}
-      <section className="relative py-32 max-lg:py-20 bg-[var(--canvas-warm)]">
+      <section className="relative py-20 max-lg:py-14 bg-[var(--canvas-warm)]">
         <div className="mx-auto max-w-[1320px] px-12 max-lg:px-6">
-          <div className="grid grid-cols-12 gap-8 mb-12 items-end">
+          <div className="grid grid-cols-12 gap-8 mb-8 items-end">
             <div className="col-span-8 max-lg:col-span-12">
               <RevealSection variant="reveal-up">
-                <span className="text-section-num text-[var(--ink-mist)]">04</span>
+                <span className="text-section-num text-[var(--ink-mist)]">03</span>
               </RevealSection>
               <RevealSection variant="reveal-up">
                 <h2 className="text-page-title mt-4">Visit &amp; Connect</h2>
               </RevealSection>
             </div>
           </div>
-          <RevealSection variant="line-draw" className="mb-12" />
+          <RevealSection variant="line-draw" className="mb-8" />
 
           {/* Bento */}
           <div className="grid grid-cols-12 grid-rows-[auto] gap-4 max-lg:gap-3">
 
             {/* 1. Hours + Live status — large */}
-            <div className="bento-card col-span-6 max-lg:col-span-12 p-8 max-lg:p-6 flex flex-col justify-between min-h-[280px]">
+            <div className="bento-card col-span-6 max-lg:col-span-12 p-8 max-lg:p-6 flex flex-col justify-between min-h-[220px]">
               <div>
                 <div className="flex items-center gap-2 text-spec-label text-[var(--ink-mist)] mb-6">
                   <span className="live-dot" style={isOpen ? {} : { backgroundColor: 'oklch(60% 0.15 30)' }} />
                   {isOpen ? 'Open now' : 'Closed now'}
                 </div>
                 <div className="font-display text-[clamp(2rem,3vw,2.75rem)] font-light leading-[1.15]">
-                  화 — 일<br />
+                  매일<br />
                   <span className="tabular-nums">10:00 — 18:00</span>
                 </div>
               </div>
-              <div className="flex items-center justify-between pt-8">
-                <span className="text-[13px] text-[var(--ink-soft)]">월요일 휴관</span>
+              <div className="flex items-center justify-end pt-8">
                 <span className="font-display text-[clamp(1.5rem,2vw,2rem)] font-extralight text-[var(--ink-mist)] tabular-nums">{clock}</span>
               </div>
             </div>
 
             {/* 2. Location */}
-            <div className="bento-card col-span-6 max-lg:col-span-12 p-8 max-lg:p-6 min-h-[280px] flex flex-col justify-between">
+            <div className="bento-card col-span-6 max-lg:col-span-12 p-8 max-lg:p-6 min-h-[220px] flex flex-col justify-between">
               <div>
                 <div className="text-spec-label text-[var(--ink-mist)] mb-6">Location</div>
                 <div className="font-display text-[clamp(1.5rem,2vw,2rem)] font-light leading-[1.3]">
@@ -472,7 +432,7 @@ export default function HomePage() {
             </div>
 
             {/* 3. Contact */}
-            <div className="bento-card col-span-4 max-lg:col-span-12 p-8 max-lg:p-6 min-h-[220px] flex flex-col justify-between">
+            <div className="bento-card col-span-4 max-lg:col-span-12 p-8 max-lg:p-6 min-h-[180px] flex flex-col justify-between">
               <div className="text-spec-label text-[var(--ink-mist)]">Contact</div>
               <div className="space-y-3">
                 <a href="tel:02-734-0458" className="block font-display text-[clamp(1.25rem,1.6vw,1.75rem)] font-light tabular-nums hover:text-[var(--ink-soft)] transition-colors">
@@ -485,7 +445,7 @@ export default function HomePage() {
             </div>
 
             {/* 4. Rental CTA — dark */}
-            <div className="bento-card col-span-4 max-lg:col-span-12 min-h-[220px] relative overflow-hidden"
+            <div className="bento-card col-span-4 max-lg:col-span-12 min-h-[180px] relative overflow-hidden"
                  style={{ backgroundColor: 'var(--void)', borderColor: 'transparent' }}>
               <Link to="/rental" className="block h-full p-8 max-lg:p-6 group">
                 <div className="h-full flex flex-col justify-between">
@@ -503,7 +463,7 @@ export default function HomePage() {
             </div>
 
             {/* 5. Instagram */}
-            <div className="bento-card col-span-4 max-lg:col-span-12 p-8 max-lg:p-6 min-h-[220px] flex flex-col justify-between">
+            <div className="bento-card col-span-4 max-lg:col-span-12 p-8 max-lg:p-6 min-h-[180px] flex flex-col justify-between">
               <div className="text-spec-label text-[var(--ink-mist)]">Instagram</div>
               <div className="font-display text-[clamp(1.25rem,1.6vw,1.75rem)] font-light">
                 @sunartcenter
@@ -543,7 +503,7 @@ export default function HomePage() {
       {/* ══════════════════════════════════════════════════════
           06 · MARQUEE — EDITORIAL CLOSER
           ══════════════════════════════════════════════════════ */}
-      <section className="relative py-24 max-lg:py-16 bg-[var(--canvas)] border-t border-b overflow-hidden"
+      <section className="relative py-14 max-lg:py-10 bg-[var(--canvas)] border-t border-b overflow-hidden"
                style={{ borderColor: 'var(--line)' }}>
         <div
           className="whitespace-nowrap font-display font-extralight uppercase tracking-[0.08em] select-none"
@@ -560,7 +520,7 @@ export default function HomePage() {
       {/* ══════════════════════════════════════════════════════
           07 · FAREWELL — BEFORE FOOTER
           ══════════════════════════════════════════════════════ */}
-      <section className="relative py-32 max-lg:py-20 bg-[var(--canvas)]">
+      <section className="relative py-20 max-lg:py-14 bg-[var(--canvas)]">
         <div className="mx-auto max-w-[1320px] px-12 max-lg:px-6">
           <div className="flex flex-wrap items-center justify-between gap-8">
             <RevealSection variant="reveal-up">
@@ -581,7 +541,7 @@ export default function HomePage() {
       {/* Dark transition to footer */}
       <div
         aria-hidden
-        className="h-[140px] max-lg:h-[80px]"
+        className="h-[100px] max-lg:h-[64px]"
         style={{ background: 'linear-gradient(to bottom, var(--canvas), var(--void))' }}
       />
     </div>

@@ -151,34 +151,34 @@ export default function Header() {
 
       {/* Mobile Nav — Full-screen overlay */}
       {mobileOpen && (
-        <nav className="lg:hidden fixed inset-0 top-[72px] bg-[#FAFAF8] z-40 overflow-y-auto px-6 pt-8 pb-20">
+        <nav className="lg:hidden fixed inset-0 top-[72px] bg-[#FAFAF8] z-40 overflow-y-auto px-6 pt-4 pb-20">
           {navItems.map((item) => (
-            <div key={item.path} className="mb-1">
+            <div key={item.path}>
               {item.sub.length > 0 ? (
                 <button
                   onClick={() => toggleMobileExpand(item.path)}
-                  className="w-full flex items-center justify-between py-4 font-display text-[28px] font-light uppercase tracking-[1px] text-[#1A1A1A]"
+                  className="w-full flex items-center justify-between py-2 font-display text-[18px] font-normal uppercase tracking-[3px] text-[#1A1A1A]"
                 >
                   {item.label}
-                  <span className={`text-[16px] text-[#B0B0B0] transition-transform duration-300 ${mobileExpanded === item.path ? 'rotate-45' : ''}`}>
+                  <span className={`text-[14px] text-[#B0B0B0] transition-transform duration-300 ${mobileExpanded === item.path ? 'rotate-45' : ''}`}>
                     +
                   </span>
                 </button>
               ) : (
                 <Link
                   to={item.path}
-                  className="block py-4 font-display text-[28px] font-light uppercase tracking-[1px] text-[#1A1A1A]"
+                  className="block py-2 font-display text-[18px] font-normal uppercase tracking-[3px] text-[#1A1A1A]"
                 >
                   {item.label}
                 </Link>
               )}
               {item.sub.length > 0 && mobileExpanded === item.path && (
-                <div className="pb-3 pl-2">
+                <div className="pb-2 pl-3">
                   {item.sub.map((sub) => (
                     <Link
                       key={sub.path}
                       to={sub.path}
-                      className="block py-2.5 text-[15px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors"
+                      className="block py-1.5 text-[14px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors"
                     >
                       {sub.label}
                     </Link>
