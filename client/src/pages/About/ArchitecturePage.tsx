@@ -14,7 +14,7 @@ export default function ArchitecturePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
             <div>
               <img
-                src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800"
+                src="/images/building/hero.jpg"
                 alt="선아트센터 외관"
                 className="w-full h-80 object-cover"
               />

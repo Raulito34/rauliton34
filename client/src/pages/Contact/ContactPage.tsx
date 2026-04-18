@@ -3,17 +3,11 @@ import type { ContactForm } from '../../types';
 
 export default function ContactPage() {
   const [form, setForm] = useState<ContactForm>({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: '',
+    name: '', email: '', phone: '', subject: '', message: '',
   });
   const [submitted, setSubmitted] = useState(false);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -25,21 +19,22 @@ export default function ContactPage() {
   if (submitted) {
     return (
       <div>
-        <section className="bg-primary text-white py-20">
-          <div className="max-w-7xl mx-auto px-4 text-center">
-            <h1 className="text-4xl font-bold mb-2">문의</h1>
-            <p className="text-gray-400 text-sm">Contact</p>
+        <section className="pt-24 pb-16">
+          <div className="max-w-[1280px] mx-auto px-12 max-lg:px-6">
+            <h1 className="text-page-title max-lg:text-[32px]">문의</h1>
+            <p className="text-[14px] text-[#B0B0B0] mt-3 font-display uppercase tracking-[2px]">Contact</p>
+            <div className="thin-divider mt-8" />
           </div>
         </section>
-        <section className="py-20 bg-white">
-          <div className="max-w-md mx-auto text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+        <section className="pb-[120px]">
+          <div className="max-w-[480px] mx-auto text-center px-6">
+            <div className="w-16 h-16 border border-[rgba(26,26,26,0.15)] flex items-center justify-center mx-auto mb-8">
+              <svg className="w-6 h-6 text-[#1A1A1A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-primary mb-4">문의가 접수되었습니다</h2>
-            <p className="text-gray-600">빠른 시일 내에 답변 드리겠습니다.</p>
+            <h2 className="font-display text-[28px] font-light mb-4">문의가 접수되었습니다</h2>
+            <p className="text-[15px] text-[#6B6B6B]">빠른 시일 내에 답변 드리겠습니다.</p>
           </div>
         </section>
       </div>
@@ -48,127 +43,81 @@ export default function ContactPage() {
 
   return (
     <div>
-      <section className="bg-primary text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-4xl font-bold mb-2">문의</h1>
-          <p className="text-gray-400 text-sm">Contact Us</p>
+      {/* Page Header */}
+      <section className="pt-24 pb-16 max-lg:pt-16 max-lg:pb-10">
+        <div className="max-w-[1280px] mx-auto px-12 max-lg:px-6">
+          <h1 className="text-page-title max-lg:text-[32px]">문의</h1>
+          <p className="text-[14px] text-[#B0B0B0] mt-3 font-display uppercase tracking-[2px]">Contact Us</p>
+          <div className="thin-divider mt-8" />
         </div>
       </section>
 
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+      <section className="pb-[120px] max-lg:pb-20">
+        <div className="max-w-[1280px] mx-auto px-12 max-lg:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
             {/* Contact Info */}
             <div>
-              <h2 className="text-xl font-bold text-primary mb-6">연락처 정보</h2>
-              <div className="space-y-6">
+              <div className="space-y-8">
                 <div>
-                  <h3 className="font-semibold text-primary mb-1">전화</h3>
-                  <p className="text-sm text-gray-600">02-000-0000</p>
+                  <p className="text-spec-label text-[#B0B0B0] mb-3">전화</p>
+                  <p className="text-[16px] text-[#1A1A1A]">02-734-0458</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-primary mb-1">팩스</h3>
-                  <p className="text-sm text-gray-600">02-000-0001</p>
+                  <p className="text-spec-label text-[#B0B0B0] mb-3">팩스</p>
+                  <p className="text-[16px] text-[#1A1A1A]">02-734-0459</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-primary mb-1">이메일</h3>
-                  <p className="text-sm text-gray-600">info@sunartcenter.com</p>
+                  <p className="text-spec-label text-[#B0B0B0] mb-3">이메일</p>
+                  <p className="text-[16px] text-[#1A1A1A]">info@sunartcenter.com</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-primary mb-1">주소</h3>
-                  <p className="text-sm text-gray-600">
-                    서울특별시 종로구 인사동길 00<br />선아트센터
+                  <p className="text-spec-label text-[#B0B0B0] mb-3">주소</p>
+                  <p className="text-[16px] text-[#1A1A1A] leading-relaxed">
+                    서울특별시 종로구<br />인사동 5길 8 선아트센터
                   </p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-primary mb-1">운영시간</h3>
-                  <p className="text-sm text-gray-600">
-                    10:00 ~ 18:00
-                  </p>
+                  <p className="text-spec-label text-[#B0B0B0] mb-3">운영시간</p>
+                  <p className="text-[16px] text-[#1A1A1A]">화 — 일 10:00 ~ 18:00</p>
+                  <p className="text-[14px] text-[#B0B0B0] mt-1">월요일 휴관</p>
                 </div>
               </div>
             </div>
 
             {/* Contact Form */}
             <div className="lg:col-span-2">
-              <h2 className="text-xl font-bold text-primary mb-6">문의하기</h2>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-primary mb-1">
-                      이름 <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={form.name}
-                      onChange={handleChange}
-                      required
-                      className="w-full border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:border-accent"
-                    />
+                    <label className="block text-[13px] text-[#6B6B6B] mb-2">이름 *</label>
+                    <input type="text" name="name" value={form.name} onChange={handleChange} required
+                      className="w-full border border-[rgba(26,26,26,0.15)] bg-transparent px-4 py-4 text-[15px] focus:outline-none focus:border-[#1A1A1A] transition-colors" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-primary mb-1">
-                      이메일 <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={form.email}
-                      onChange={handleChange}
-                      required
-                      className="w-full border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:border-accent"
-                    />
+                    <label className="block text-[13px] text-[#6B6B6B] mb-2">이메일 *</label>
+                    <input type="email" name="email" value={form.email} onChange={handleChange} required
+                      className="w-full border border-[rgba(26,26,26,0.15)] bg-transparent px-4 py-4 text-[15px] focus:outline-none focus:border-[#1A1A1A] transition-colors" />
                   </div>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-primary mb-1">연락처</label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={form.phone}
-                      onChange={handleChange}
-                      className="w-full border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:border-accent"
-                    />
+                    <label className="block text-[13px] text-[#6B6B6B] mb-2">연락처</label>
+                    <input type="tel" name="phone" value={form.phone} onChange={handleChange}
+                      className="w-full border border-[rgba(26,26,26,0.15)] bg-transparent px-4 py-4 text-[15px] focus:outline-none focus:border-[#1A1A1A] transition-colors" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-primary mb-1">
-                      제목 <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="subject"
-                      value={form.subject}
-                      onChange={handleChange}
-                      required
-                      className="w-full border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:border-accent"
-                    />
+                    <label className="block text-[13px] text-[#6B6B6B] mb-2">제목 *</label>
+                    <input type="text" name="subject" value={form.subject} onChange={handleChange} required
+                      className="w-full border border-[rgba(26,26,26,0.15)] bg-transparent px-4 py-4 text-[15px] focus:outline-none focus:border-[#1A1A1A] transition-colors" />
                   </div>
                 </div>
-
                 <div>
-                  <label className="block text-sm font-medium text-primary mb-1">
-                    문의 내용 <span className="text-red-500">*</span>
-                  </label>
-                  <textarea
-                    name="message"
-                    value={form.message}
-                    onChange={handleChange}
-                    required
-                    rows={6}
-                    className="w-full border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:border-accent resize-none"
-                  />
+                  <label className="block text-[13px] text-[#6B6B6B] mb-2">문의 내용 *</label>
+                  <textarea name="message" value={form.message} onChange={handleChange} required rows={6}
+                    className="w-full border border-[rgba(26,26,26,0.15)] bg-transparent px-4 py-4 text-[15px] focus:outline-none focus:border-[#1A1A1A] transition-colors resize-none" />
                 </div>
-
                 <div className="pt-2">
-                  <button
-                    type="submit"
-                    className="bg-accent text-white px-10 py-3 text-sm font-medium hover:bg-accent-light transition-colors"
-                  >
-                    문의하기
-                  </button>
+                  <button type="submit" className="btn-primary">문의하기</button>
                 </div>
               </form>
             </div>

@@ -4,24 +4,23 @@ import { getBookingStatuses, getSpaceStatusForWeek } from '../../services/rental
 import type { RentalBooking } from '../../types';
 
 const spaces = [
-  { key: '1F 1전시관', floor: '1F', name: '1전시관', area: '120㎡ (35평)' },
-  { key: '2F 2전시관', floor: '2F', name: '2전시관', area: '250㎡ (75평)' },
-  { key: '3F 3전시관', floor: '3F', name: '3전시관', area: '250㎡ (75평)' },
-  { key: '4F 4전시관', floor: '4F', name: '4전시관', area: '70㎡ (20평)' },
-  { key: 'B1F B1전시관', floor: 'B1F', name: 'B1전시관', area: '250㎡ (75평)' },
+  { key: 'B1F B1전시관', label: 'B1', name: 'B1 전시관', area: '250㎡' },
+  { key: '1F 1전시관',  label: '01', name: '1 전시관',  area: '120㎡' },
+  { key: '2F 2전시관',  label: '02', name: '2 전시관',  area: '250㎡' },
+  { key: '3F 3전시관',  label: '03', name: '3 전시관',  area: '250㎡' },
+  { key: '4F 4전시관',  label: '04', name: '4 전시관',  area: '70㎡'  },
 ];
 
 const floorPlans: Record<string, string[]> = {
-  '1F 1전시관': ['면적: 120㎡ (35평)', '층고: 3.0m', '대형 쇼윈도 및 도로 직접 노출', '조명 시스템', '시스템 냉난방', '엘리베이터'],
-  '2F 2전시관': ['면적: 250㎡ (75평)', '층고: 2.6m', '조명 시스템', '시스템 냉난방', '엘리베이터'],
-  '3F 3전시관': ['면적: 250㎡ (75평)', '층고: 2.6m', '조명 시스템', '시스템 냉난방', '엘리베이터'],
-  '4F 4전시관': ['면적: 70㎡ (20평)', '층고: 4.3m', '조명 시스템', '시스템 냉난방', '엘리베이터', '4.3m 천장고'],
-  'B1F B1전시관': ['면적: 250㎡ (75평)', '층고: 2.6m', '조명 시스템', '시스템 냉난방'],
+  '1F 1전시관':  ['120㎡ (35평)', '천장고 3.0M', '유리 파사드', '인사동 거리 노출'],
+  '2F 2전시관':  ['250㎡ (75평)', '천장고 2.6M', '시멘트 바닥 · 화이트 월'],
+  '3F 3전시관':  ['250㎡ (75평)', '천장고 2.6M', '분할 가능 공간'],
+  '4F 4전시관':  ['70㎡ (20평)',  '천장고 4.3M', '높은 천장 · 조각 · 설치 적합'],
+  'B1F B1전시관': ['250㎡ (75평)', '천장고 2.6M', '완전 차광 · 미디어아트'],
 };
 
 function getTuesday(d: Date): Date {
   const day = d.getDay();
-  // Tuesday = 2. If today is Sun(0) or Mon(1), go back to last Tuesday
   const diff = day >= 2 ? day - 2 : day - 2 + 7;
   const tue = new Date(d);
   tue.setDate(tue.getDate() - diff);
@@ -36,10 +35,9 @@ function addDays(d: Date, n: number): Date {
 }
 
 function formatDate(d: Date): string {
-  const y = String(d.getFullYear()).slice(2);
   const m = String(d.getMonth() + 1).padStart(2, '0');
   const dd = String(d.getDate()).padStart(2, '0');
-  return `${y}.${m}.${dd}`;
+  return `${m}.${dd}`;
 }
 
 function formatISO(d: Date): string {
@@ -49,27 +47,15 @@ function formatISO(d: Date): string {
   return `${y}-${m}-${dd}`;
 }
 
-const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
-
-function getDayName(d: Date): string {
-  return dayNames[d.getDay()];
-}
-
-interface WeekRange {
-  start: Date;
-  end: Date;
-  label: string;
-}
-
-function generateWeeks(baseTuesday: Date, count: number): WeekRange[] {
-  const weeks: WeekRange[] = [];
+function generateWeeks(baseTuesday: Date, count: number) {
+  const weeks: { start: Date; end: Date; month: string }[] = [];
   for (let i = 0; i < count; i++) {
     const start = addDays(baseTuesday, i * 7);
-    const end = addDays(start, 6); // Tuesday + 6 = Monday
+    const end = addDays(start, 6);
     weeks.push({
       start,
       end,
-      label: `${formatDate(start)} (${getDayName(start)}) ~ ${formatDate(end)} (${getDayName(end)})`,
+      month: `${start.getMonth() + 1}월`,
     });
   }
   return weeks;
@@ -79,22 +65,6 @@ interface SelectedCell {
   weekIdx: number;
   spaceKey: string;
 }
-
-const statusLabelMap: Record<string, string> = {
-  available: '선택',
-  reviewing: '심사중',
-  pending: '심사중',
-  confirmed: '대관완료',
-  approved: '대관완료',
-};
-
-const statusColorMap: Record<string, string> = {
-  available: 'text-emerald-600',
-  reviewing: 'text-orange-500',
-  pending: 'text-orange-500',
-  confirmed: 'text-gray-400',
-  approved: 'text-gray-400',
-};
 
 export default function StatusPage() {
   const navigate = useNavigate();
@@ -118,10 +88,9 @@ export default function StatusPage() {
 
   const weeks = useMemo(
     () => generateWeeks(addDays(baseTuesday, pageOffset * 7 * WEEKS_PER_PAGE), WEEKS_PER_PAGE),
-    [pageOffset],
+    [pageOffset, baseTuesday],
   );
 
-  // Build status grid from server data
   const statusGrid = useMemo(() => {
     const grid: Record<string, string[]> = {};
     for (const sp of spaces) {
@@ -161,213 +130,250 @@ export default function StatusPage() {
       startDate: formatISO(earliest),
       endDate: formatISO(latest),
     });
-
     navigate(`/rental/apply?${params.toString()}`);
   };
 
   const isAvailable = (status: string) => status === 'available';
 
   return (
-    <div>
-      {/* Hero */}
-      <section className="bg-primary text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-4xl font-bold mb-2">대관신청</h1>
-          <p className="text-gray-400 text-sm">Rental Application</p>
+    <div className="bg-[var(--canvas)] min-h-screen">
+      {/* ═══ Header ═══ */}
+      <section className="pt-32 pb-12 max-lg:pt-20 max-lg:pb-8">
+        <div className="mx-auto max-w-[1320px] px-12 max-lg:px-6">
+          <span className="text-section-num text-[var(--ink-mist)]">Availability</span>
         </div>
       </section>
 
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          {/* Legend */}
-          <div className="flex flex-wrap items-center justify-between mb-8">
-            <p className="text-gray-600 text-sm mb-4 lg:mb-0">
-              대관 가능한 전시장을 선택하여 신청하세요.
-            </p>
-            <div className="flex items-center gap-6 text-sm">
+      {/* ═══ Legend & Navigation ═══ */}
+      <section className="pb-8">
+        <div className="mx-auto max-w-[1320px] px-12 max-lg:px-6">
+          <div className="flex flex-wrap items-center justify-between gap-6 py-6 border-t border-b border-[var(--line)]">
+            <div className="flex items-center gap-6 max-lg:gap-4 text-[12px] tracking-[0.1em] uppercase text-[var(--ink-mist)]">
               <span className="flex items-center gap-2">
-                <span className="w-4 h-4 rounded bg-emerald-100 border border-emerald-400 inline-block" />
-                대관가능
+                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: 'oklch(60% 0.18 145)' }} />
+                가능
               </span>
               <span className="flex items-center gap-2">
-                <span className="w-4 h-4 rounded bg-orange-100 border border-orange-400 inline-block" />
+                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: 'oklch(70% 0.12 60)' }} />
                 심사중
               </span>
               <span className="flex items-center gap-2">
-                <span className="w-4 h-4 rounded bg-gray-200 border border-gray-300 inline-block" />
-                대관완료
+                <span className="w-2 h-2 rounded-full bg-[var(--ink-faint)]" />
+                마감
               </span>
             </div>
-          </div>
 
-          {/* Navigation */}
-          <div className="flex items-center justify-between mb-6">
-            <button
-              onClick={() => { setPageOffset((p) => p - 1); setSelected([]); }}
-              className="flex items-center gap-1 text-sm text-gray-600 hover:text-accent transition-colors px-3 py-2 border border-gray-300 rounded"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              이전
-            </button>
-            <span className="text-sm font-medium text-primary">
-              {formatDate(weeks[0].start)} ~ {formatDate(weeks[weeks.length - 1].end)}
-            </span>
-            <button
-              onClick={() => { setPageOffset((p) => p + 1); setSelected([]); }}
-              className="flex items-center gap-1 text-sm text-gray-600 hover:text-accent transition-colors px-3 py-2 border border-gray-300 rounded"
-            >
-              다음
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => { setPageOffset((p) => Math.max(0, p - 1)); setSelected([]); }}
+                disabled={pageOffset === 0}
+                className="w-10 h-10 flex items-center justify-center border border-[var(--line-strong)] hover:bg-[var(--canvas-warm)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                aria-label="이전 기간"
+              >
+                ←
+              </button>
+              <span className="text-[13px] tabular-nums text-[var(--ink-soft)] min-w-[160px] text-center">
+                {formatDate(weeks[0].start)} — {formatDate(weeks[weeks.length - 1].end)}
+              </span>
+              <button
+                onClick={() => { setPageOffset((p) => p + 1); setSelected([]); }}
+                className="w-10 h-10 flex items-center justify-center border border-[var(--line-strong)] hover:bg-[var(--canvas-warm)] transition-colors"
+                aria-label="다음 기간"
+              >
+                →
+              </button>
+            </div>
           </div>
+        </div>
+      </section>
 
+      {/* ═══ Availability Grid ═══ */}
+      <section className="pb-16">
+        <div className="mx-auto max-w-[1320px] px-12 max-lg:px-6">
           {loading ? (
-            <div className="text-center py-20 text-gray-400">대관 현황을 불러오는 중...</div>
+            <div className="py-32 text-center text-[var(--ink-mist)] text-[14px]">
+              <div className="inline-block w-1 h-1 rounded-full bg-[var(--ink-mist)] animate-pulse" />
+              <span className="ml-3">Loading availability...</span>
+            </div>
           ) : (
-            <>
-              {/* Calendar Table */}
-              <div className="overflow-x-auto border border-gray-200 rounded-lg">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="bg-primary text-white">
-                      <th className="py-3 px-4 text-left font-medium w-[260px] min-w-[220px]">기간</th>
-                      {spaces.map((sp) => (
-                        <th key={sp.key} className="py-3 px-3 text-center font-medium min-w-[120px]">
-                          <div>{sp.floor}</div>
-                          <div className="text-xs font-normal text-gray-300">{sp.name}</div>
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {weeks.map((week, wi) => (
-                      <tr key={wi} className={wi % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                        <td className="py-3 px-4 text-gray-700 font-medium text-xs whitespace-nowrap border-r border-gray-100">
-                          {week.label}
-                        </td>
-                        {spaces.map((sp) => {
-                          const status = statusGrid[sp.key][wi];
-                          const checked = isSelected(wi, sp.key);
-                          return (
-                            <td key={sp.key} className="py-3 px-3 text-center border-r border-gray-100 last:border-r-0">
-                              {isAvailable(status) ? (
-                                <label className="cursor-pointer inline-flex items-center gap-1.5 select-none">
-                                  <input
-                                    type="checkbox"
-                                    checked={checked}
-                                    onChange={() => toggleSelect(wi, sp.key)}
-                                    className="w-4 h-4 accent-emerald-600 cursor-pointer"
-                                  />
-                                  <span className="text-emerald-600 text-xs font-medium">선택</span>
-                                </label>
-                              ) : (
-                                <span className={`text-xs font-medium ${statusColorMap[status] || 'text-gray-400'}`}>
-                                  {statusLabelMap[status] || status}
-                                </span>
-                              )}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            <div className="border-t border-[var(--line)]">
+              {/* Header row */}
+              <div className="grid grid-cols-[180px_repeat(5,1fr)] max-lg:grid-cols-[100px_repeat(5,1fr)] gap-0 py-4 border-b border-[var(--line)] sticky top-[72px] bg-[var(--canvas)] z-10">
+                <div className="text-spec-label text-[var(--ink-mist)] px-2">Week</div>
+                {spaces.map((sp) => (
+                  <button
+                    key={sp.key}
+                    onClick={() => setDetailSpace(sp.key)}
+                    className="text-center px-2 group cursor-pointer"
+                  >
+                    <div className="font-display text-[clamp(1rem,1.5vw,1.375rem)] font-light tabular-nums leading-none group-hover:text-[var(--ink-soft)] transition-colors">
+                      {sp.label}
+                    </div>
+                    <div className="text-[10px] tracking-[0.1em] uppercase text-[var(--ink-mist)] mt-1 max-lg:hidden">
+                      {sp.area}
+                    </div>
+                  </button>
+                ))}
               </div>
 
-              {/* Selected Summary & Apply */}
-              {selected.length > 0 && (
-                <div className="mt-8 border border-accent/30 rounded-lg bg-accent/5 p-6">
-                  <h3 className="text-lg font-bold text-primary mb-4">선택 내역</h3>
-                  <div className="space-y-3 mb-6">
-                    {(() => {
-                      const grouped: Record<string, number[]> = {};
-                      for (const s of selected) {
-                        if (!grouped[s.spaceKey]) grouped[s.spaceKey] = [];
-                        grouped[s.spaceKey].push(s.weekIdx);
-                      }
-                      return Object.entries(grouped).map(([spaceKey, weekIdxs]) => {
-                        const sortedWeeks = weekIdxs.sort((a, b) => a - b);
-                        const earliest = weeks[sortedWeeks[0]].start;
-                        const latest = weeks[sortedWeeks[sortedWeeks.length - 1]].end;
-                        return (
-                          <div key={spaceKey} className="flex flex-wrap items-center gap-4 bg-white rounded p-4 border border-gray-200">
-                            <div className="flex-1 min-w-0">
-                              <span className="font-medium text-primary">{spaceKey}</span>
-                              <span className="text-sm text-gray-500 ml-3">
-                                {formatDate(earliest)} ~ {formatDate(latest)} ({sortedWeeks.length}주)
-                              </span>
-                            </div>
-                            <button
-                              onClick={() => setDetailSpace(spaceKey)}
-                              className="text-xs text-accent hover:text-accent-light border border-accent/40 px-3 py-1.5 rounded transition-colors"
-                            >
-                              전시장 정보
-                            </button>
-                          </div>
-                        );
-                      });
-                    })()}
+              {/* Week rows */}
+              {weeks.map((week, wi) => {
+                const prevMonth = wi > 0 ? weeks[wi - 1].month : '';
+                const showMonth = wi === 0 || week.month !== prevMonth;
+                return (
+                  <div
+                    key={wi}
+                    className="grid grid-cols-[180px_repeat(5,1fr)] max-lg:grid-cols-[100px_repeat(5,1fr)] gap-0 border-b border-[var(--line)] hover:bg-[var(--canvas-warm)]/50 transition-colors"
+                  >
+                    <div className="py-4 px-2 flex items-center gap-3">
+                      {showMonth && (
+                        <span className="text-[10px] tracking-[0.15em] uppercase text-[var(--ink-faint)] font-display">
+                          {week.month}
+                        </span>
+                      )}
+                      <span className="text-[13px] tabular-nums text-[var(--ink-soft)]">
+                        {formatDate(week.start)}
+                      </span>
+                    </div>
+                    {spaces.map((sp) => {
+                      const status = statusGrid[sp.key][wi];
+                      const checked = isSelected(wi, sp.key);
+                      const available = isAvailable(status);
+                      return (
+                        <button
+                          key={sp.key}
+                          onClick={() => available && toggleSelect(wi, sp.key)}
+                          disabled={!available}
+                          className={`
+                            relative py-4 px-2 flex items-center justify-center text-[12px] tracking-wide
+                            border-l border-[var(--line)]
+                            transition-all duration-200
+                            ${available ? 'cursor-pointer hover:bg-[var(--canvas-warm)]' : 'cursor-not-allowed'}
+                            ${checked ? 'bg-[var(--ink)] text-[var(--canvas)]' : ''}
+                          `}
+                          style={{ transitionTimingFunction: 'var(--ease-out-quart)' }}
+                        >
+                          {checked ? (
+                            <span className="flex items-center gap-1.5">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[var(--canvas)]" />
+                              <span className="font-medium">선택</span>
+                            </span>
+                          ) : available ? (
+                            <span className="text-[var(--ink-mist)]" style={{ color: 'oklch(55% 0.12 145)' }}>
+                              가능
+                            </span>
+                          ) : status === 'reviewing' || status === 'pending' ? (
+                            <span style={{ color: 'oklch(62% 0.10 60)' }}>심사중</span>
+                          ) : (
+                            <span className="text-[var(--ink-faint)]">마감</span>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
-                  <div className="text-center">
-                    <button
-                      onClick={handleApply}
-                      className="bg-accent text-white px-12 py-3 text-sm font-medium hover:bg-accent-light transition-colors rounded"
-                    >
-                      대관 신청하기
-                    </button>
-                  </div>
-                </div>
-              )}
-            </>
+                );
+              })}
+            </div>
           )}
         </div>
       </section>
 
-      {/* Space Detail Modal */}
+      {/* ═══ Selection Summary — sticky bottom ═══ */}
+      {selected.length > 0 && (
+        <div className="sticky bottom-0 z-20 bg-[var(--void)] text-[var(--snow)] border-t border-[rgba(250,250,248,0.1)] shadow-[0_-10px_40px_rgba(0,0,0,0.15)]">
+          <div className="mx-auto max-w-[1320px] px-12 max-lg:px-6 py-5 max-lg:py-4">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-6 max-lg:gap-3 flex-wrap">
+                <div>
+                  <div className="text-spec-label text-[rgba(250,250,248,0.5)] mb-1">Selected</div>
+                  <div className="font-display text-[20px] font-light tabular-nums">
+                    {selected.length}주 · {new Set(selected.map(s => s.spaceKey)).size}개 공간
+                  </div>
+                </div>
+
+                <div className="hidden lg:flex gap-2 flex-wrap max-w-[600px]">
+                  {(() => {
+                    const grouped: Record<string, number[]> = {};
+                    for (const s of selected) {
+                      if (!grouped[s.spaceKey]) grouped[s.spaceKey] = [];
+                      grouped[s.spaceKey].push(s.weekIdx);
+                    }
+                    return Object.entries(grouped).map(([spaceKey, idxs]) => {
+                      const sp = spaces.find(s => s.key === spaceKey);
+                      return (
+                        <span
+                          key={spaceKey}
+                          className="text-[12px] tracking-wide px-3 py-1.5 bg-[rgba(250,250,248,0.1)] border border-[rgba(250,250,248,0.15)]"
+                        >
+                          {sp?.label} · {idxs.length}주
+                        </span>
+                      );
+                    });
+                  })()}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setSelected([])}
+                  className="text-[12px] tracking-[0.1em] uppercase text-[rgba(250,250,248,0.6)] hover:text-[var(--snow)] transition-colors"
+                >
+                  초기화
+                </button>
+                <button
+                  onClick={handleApply}
+                  className="px-8 py-3.5 bg-[var(--snow)] text-[var(--ink)] text-[12px] tracking-[0.1em] uppercase font-medium hover:bg-[oklch(92%_0.004_80)] transition-colors"
+                >
+                  신청하기 →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ Space Detail Drawer ═══ */}
       {detailSpace && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+          className="fixed inset-0 z-50 flex items-end justify-center lg:items-center bg-[oklch(10%_0.005_80/0.6)] backdrop-blur-sm animate-fade-up"
+          style={{ '--delay': '0ms' } as React.CSSProperties}
           onClick={() => setDetailSpace(null)}
         >
           <div
-            className="bg-white rounded-lg max-w-lg w-full mx-4 overflow-hidden"
+            className="bg-[var(--canvas)] w-full max-w-[520px] mx-0 lg:mx-4 p-10 max-lg:p-6 animate-fade-up"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="bg-primary text-white px-6 py-4 flex items-center justify-between">
-              <h3 className="font-bold text-lg">{detailSpace}</h3>
-              <button onClick={() => setDetailSpace(null)} className="text-white/70 hover:text-white">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            <div className="p-6">
-              <div className="bg-gray-100 rounded-lg p-8 mb-6 flex items-center justify-center">
-                <div className="text-center">
-                  <svg className="w-16 h-16 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
-                  </svg>
-                  <p className="text-sm text-gray-400">전시장 도면</p>
-                </div>
+            <div className="flex items-start justify-between mb-8">
+              <div>
+                <span className="text-spec-label text-[var(--ink-mist)]">Space</span>
+                <h3 className="font-display text-[clamp(1.5rem,2vw,2rem)] font-light mt-2">
+                  {spaces.find(s => s.key === detailSpace)?.name}
+                </h3>
               </div>
-              <h4 className="font-medium text-primary mb-3">공간 정보</h4>
-              <ul className="space-y-2">
-                {(floorPlans[detailSpace] || []).map((info, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                    <span className="text-accent mt-0.5">&#8226;</span>
-                    {info}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="px-6 pb-6 text-center">
               <button
                 onClick={() => setDetailSpace(null)}
-                className="bg-primary text-white px-8 py-2.5 text-sm font-medium hover:bg-secondary transition-colors rounded"
+                className="w-8 h-8 flex items-center justify-center text-[var(--ink-soft)] hover:text-[var(--ink)] transition-colors"
+                aria-label="닫기"
+              >
+                ✕
+              </button>
+            </div>
+
+            <ul className="space-y-4 border-t border-[var(--line)] pt-6">
+              {(floorPlans[detailSpace] || []).map((info, i) => (
+                <li key={i} className="flex items-baseline gap-4">
+                  <span className="text-[11px] font-display tabular-nums text-[var(--ink-faint)] tracking-wider shrink-0">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span className="text-[14px] text-[var(--ink-soft)] leading-relaxed">{info}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-10 flex gap-3">
+              <button
+                onClick={() => setDetailSpace(null)}
+                className="flex-1 btn-outline"
               >
                 닫기
               </button>
