@@ -1,8 +1,16 @@
 import type { Exhibition, Space, RentalPricing, RentalApplication, RentalBooking, NewsItem, ContactForm, SiteImage } from '../types';
 
-const API_BASE = import.meta.env.VITE_API_URL
-  ? `${import.meta.env.VITE_API_URL}/api`
-  : '/api';
+// Resolve API_BASE defensively:
+//   - If VITE_API_URL is not set → use same-origin '/api' (works via Vercel proxy).
+//   - If it's set but missing scheme (e.g. "rauliton34-production.up.railway.app"),
+//     prepend https:// so the browser doesn't treat it as a relative path.
+function resolveApiBase(): string {
+  const raw = (import.meta.env.VITE_API_URL as string | undefined)?.trim();
+  if (!raw) return '/api';
+  const withScheme = /^https?:\/\//.test(raw) ? raw : `https://${raw}`;
+  return `${withScheme.replace(/\/+$/, '')}/api`;
+}
+const API_BASE = resolveApiBase();
 
 export function getAdminCode(): string | null {
   return sessionStorage.getItem('adminCode');
