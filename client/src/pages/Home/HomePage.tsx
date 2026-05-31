@@ -1,6 +1,7 @@
-import { useEffect, useState, useRef, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../services/api';
+import { useReveal } from '../../hooks/useReveal';
 import type { NewsItem, SiteImage } from '../../types';
 
 const DEFAULT_HERO = '/images/building/hero.jpg';
@@ -22,26 +23,6 @@ const spaces = [
 /* ══════════════════════════════════════════════════════
    HOOKS
    ══════════════════════════════════════════════════════ */
-
-function useReveal<T extends HTMLElement = HTMLDivElement>() {
-  const ref = useRef<T>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          el.classList.add('visible');
-          observer.unobserve(el);
-        }
-      },
-      { threshold: 0.12, rootMargin: '0px 0px -80px 0px' }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-  return ref;
-}
 
 /** Live "OPEN NOW / CLOSED" indicator based on Seoul hours. */
 function useOpenStatus() {
@@ -86,8 +67,10 @@ export default function HomePage() {
   const { isOpen, clock } = useOpenStatus();
 
   useEffect(() => {
-    api.getNews('notice').then(setNotices).catch(() => {});
+    let cancelled = false;
+    api.getNews('notice').then((items) => { if (!cancelled) setNotices(items); }).catch(() => {});
     api.getSiteImages().then((images: SiteImage[]) => {
+      if (cancelled) return;
       const imageMap: Record<string, string> = {};
       images.forEach((img) => { imageMap[img.key] = img.imageUrl; });
       if (imageMap.hero) setHeroImage(imageMap.hero);
@@ -98,6 +81,7 @@ export default function HomePage() {
         })
       );
     }).catch(() => {});
+    return () => { cancelled = true; };
   }, []);
 
   const todayLine = useMemo(() => {
@@ -118,6 +102,8 @@ export default function HomePage() {
         <img
           alt="Sun Art Center"
           src={heroImage}
+          width={1920}
+          height={1280}
           className="absolute inset-0 w-full h-full object-cover object-[center_28%]"
           fetchPriority="high"
         />

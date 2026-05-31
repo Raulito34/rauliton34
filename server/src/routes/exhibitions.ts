@@ -7,7 +7,8 @@ const router = Router();
 
 router.get('/', asyncHandler(async (req, res) => {
   const { status } = req.query;
-  const where = status && status !== 'all' ? { status: String(status) } : {};
+  const allowedStatuses = ['current', 'upcoming', 'past'];
+  const where = typeof status === 'string' && allowedStatuses.includes(status) ? { status } : {};
   const exhibitions = await prisma.exhibition.findMany({ where, orderBy: { startDate: 'desc' } });
   res.json(exhibitions);
 }));
