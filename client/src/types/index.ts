@@ -53,12 +53,14 @@ export interface NewsItem {
   thumbnail?: string;
 }
 
+export type RentalStatus = 'pending' | 'approved' | 'confirmed' | 'rejected' | 'cancelled';
+
 export interface RentalBooking {
   id: number;
   spaceName: string;
   startDate: string;
   endDate: string;
-  status: string;
+  status: RentalStatus;
   applicantName: string;
   organization: string;
   email: string;

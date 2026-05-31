@@ -70,10 +70,27 @@ export default function Header() {
     setMobileOpen(false);
   }, [location.pathname]);
 
-  const isActive = (path: string) => location.pathname.startsWith(path);
+  // Lock body scroll while the full-screen mobile overlay is open.
+  useEffect(() => {
+    if (mobileOpen) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => { document.body.style.overflow = prev; };
+    }
+  }, [mobileOpen]);
+
+  const isActive = (path: string) =>
+    path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);
 
   const toggleMobileExpand = (path: string) => {
     setMobileExpanded(mobileExpanded === path ? null : path);
+  };
+
+  // Close the desktop dropdown when focus leaves the menu group entirely.
+  const handleGroupBlur = (e: React.FocusEvent<HTMLDivElement>, path: string) => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      setActiveDropdown((cur) => (cur === path ? null : cur));
+    }
   };
 
   return (
@@ -94,56 +111,69 @@ export default function Header() {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-1">
-          {navItems.map((item) => (
-            <div
-              key={item.path}
-              className="relative"
-              onMouseEnter={() => setActiveDropdown(item.path)}
-              onMouseLeave={() => setActiveDropdown(null)}
-            >
-              <Link
-                to={item.path}
-                className={`font-display text-[14px] font-normal uppercase tracking-[1px] px-5 py-2 transition-colors ${
-                  isActive(item.path)
-                    ? 'text-[#1A1A1A]'
-                    : 'text-[#B0B0B0] hover:text-[#1A1A1A]'
-                }`}
+        <nav className="hidden lg:flex items-center gap-1" aria-label="주 메뉴">
+          {navItems.map((item) => {
+            const hasSub = item.sub.length > 0;
+            const open = activeDropdown === item.path;
+            return (
+              <div
+                key={item.path}
+                className="relative"
+                onMouseEnter={() => hasSub && setActiveDropdown(item.path)}
+                onMouseLeave={() => hasSub && setActiveDropdown(null)}
+                onFocus={() => hasSub && setActiveDropdown(item.path)}
+                onBlur={(e) => hasSub && handleGroupBlur(e, item.path)}
+                onKeyDown={(e) => { if (e.key === 'Escape') setActiveDropdown(null); }}
               >
-                {item.label}
-              </Link>
+                <Link
+                  to={item.path}
+                  aria-haspopup={hasSub ? 'menu' : undefined}
+                  aria-expanded={hasSub ? open : undefined}
+                  aria-current={isActive(item.path) ? 'page' : undefined}
+                  className={`font-display text-[14px] font-normal uppercase tracking-[1px] px-5 py-2 transition-colors inline-block ${
+                    isActive(item.path)
+                      ? 'text-[#1A1A1A]'
+                      : 'text-[#B0B0B0] hover:text-[#1A1A1A]'
+                  }`}
+                >
+                  {item.label}
+                </Link>
 
-              {/* Active indicator */}
-              {isActive(item.path) && (
-                <div className="absolute bottom-0 left-5 right-5 h-[2px] bg-[#1A1A1A]" />
-              )}
+                {/* Active indicator */}
+                {isActive(item.path) && (
+                  <div className="absolute bottom-0 left-5 right-5 h-[2px] bg-[#1A1A1A]" />
+                )}
 
-              {/* Dropdown */}
-              {item.sub.length > 0 && activeDropdown === item.path && (
-                <div className="absolute top-full left-0 pt-3 min-w-[200px]">
-                  <div className="bg-[#FAFAF8] shadow-[0_4px_20px_rgba(0,0,0,0.08)] py-4">
-                    <div className="thin-divider mb-3" />
-                    {item.sub.map((sub) => (
-                      <Link
-                        key={sub.path}
-                        to={sub.path}
-                        className="block px-6 py-2.5 text-[14px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors"
-                      >
-                        {sub.label}
-                      </Link>
-                    ))}
+                {/* Dropdown */}
+                {hasSub && open && (
+                  <div className="absolute top-full left-0 pt-3 min-w-[200px]" role="menu" aria-label={item.label}>
+                    <div className="bg-[#FAFAF8] shadow-[0_4px_20px_rgba(0,0,0,0.08)] py-4">
+                      <div className="thin-divider mb-3" />
+                      {item.sub.map((sub) => (
+                        <Link
+                          key={sub.path}
+                          to={sub.path}
+                          role="menuitem"
+                          className="block px-6 py-2.5 text-[14px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors"
+                        >
+                          {sub.label}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-          ))}
+                )}
+              </div>
+            );
+          })}
         </nav>
 
         {/* Mobile Menu Button */}
         <button
           className="lg:hidden font-display text-[12px] font-normal tracking-[2px] uppercase text-[#1A1A1A]"
           onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="메뉴 열기"
+          aria-label={mobileOpen ? '메뉴 닫기' : '메뉴 열기'}
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-nav"
         >
           {mobileOpen ? 'Close' : 'Index'}
         </button>
@@ -151,33 +181,43 @@ export default function Header() {
 
       {/* Mobile Nav — Full-screen overlay */}
       {mobileOpen && (
-        <nav className="lg:hidden fixed inset-0 top-[72px] bg-[#FAFAF8] z-40 overflow-y-auto px-6 pt-4 pb-20">
+        <nav
+          id="mobile-nav"
+          role="dialog"
+          aria-modal="true"
+          aria-label="모바일 메뉴"
+          className="lg:hidden fixed inset-0 top-[72px] bg-[#FAFAF8] z-40 overflow-y-auto px-6 pt-4 pb-20"
+        >
           {navItems.map((item) => (
             <div key={item.path}>
               {item.sub.length > 0 ? (
                 <button
                   onClick={() => toggleMobileExpand(item.path)}
+                  aria-haspopup="menu"
+                  aria-expanded={mobileExpanded === item.path}
                   className="w-full flex items-center justify-between py-2 font-display text-[18px] font-normal uppercase tracking-[3px] text-[#1A1A1A]"
                 >
                   {item.label}
-                  <span className={`text-[14px] text-[#B0B0B0] transition-transform duration-300 ${mobileExpanded === item.path ? 'rotate-45' : ''}`}>
+                  <span className={`text-[14px] text-[#B0B0B0] transition-transform duration-300 ${mobileExpanded === item.path ? 'rotate-45' : ''}`} aria-hidden="true">
                     +
                   </span>
                 </button>
               ) : (
                 <Link
                   to={item.path}
+                  aria-current={isActive(item.path) ? 'page' : undefined}
                   className="block py-2 font-display text-[18px] font-normal uppercase tracking-[3px] text-[#1A1A1A]"
                 >
                   {item.label}
                 </Link>
               )}
               {item.sub.length > 0 && mobileExpanded === item.path && (
-                <div className="pb-2 pl-3">
+                <div className="pb-2 pl-3" role="menu" aria-label={item.label}>
                   {item.sub.map((sub) => (
                     <Link
                       key={sub.path}
                       to={sub.path}
+                      role="menuitem"
                       className="block py-1.5 text-[14px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors"
                     >
                       {sub.label}

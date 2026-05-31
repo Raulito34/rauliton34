@@ -115,24 +115,28 @@ export default function RentalListPage() {
 
               <form onSubmit={handleLookup} className="space-y-10">
                 <div>
-                  <label className="block text-spec-label text-[var(--ink-mist)] mb-3">Name</label>
+                  <label htmlFor="lookup-name" className="block text-spec-label text-[var(--ink-mist)] mb-3">Name</label>
                   <input
+                    id="lookup-name"
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
+                    maxLength={80}
                     placeholder="홍길동"
                     className={inputCls}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-spec-label text-[var(--ink-mist)] mb-3">Email</label>
+                  <label htmlFor="lookup-email" className="block text-spec-label text-[var(--ink-mist)] mb-3">Email</label>
                   <input
+                    id="lookup-email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    maxLength={320}
                     placeholder="example@email.com"
                     className={inputCls}
                   />

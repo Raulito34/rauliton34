@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 
 declare global {
   interface Window {
+    // Kakao Maps SDK is loaded dynamically and ships no types; the surface we
+    // touch (maps.load/Map/LatLng/Marker) is untyped by design.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     kakao: any;
   }
 }

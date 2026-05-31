@@ -230,7 +230,9 @@ export default function ExhibitionPage() {
                       <div className="overflow-hidden">
                         <img
                           src={ex.imageUrl}
-                          alt={ex.title}
+                          alt={`${ex.title} — ${ex.artist}`}
+                          loading="lazy"
+                          decoding="async"
                           className="w-full aspect-[4/5] object-cover img-grayscale group-hover:scale-[1.02] transition-transform duration-500"
                         />
                       </div>
