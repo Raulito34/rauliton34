@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { useReveal } from '../../hooks/useReveal';
 
 const spaces = [
   { floor: 'b1f', label: 'B1', name: 'B1 전시관', area: '250㎡', pyeong: '75평', height: '2.6M', imageUrl: '/images/spaces/b1f.jpg' },
@@ -8,26 +8,6 @@ const spaces = [
   { floor: '3f',  label: '03', name: '3 전시관',  area: '250㎡', pyeong: '75평', height: '2.6M', imageUrl: '/images/spaces/3f.jpg'  },
   { floor: '4f',  label: '04', name: '4 전시관',  area: '70㎡',  pyeong: '20평', height: '4.3M', imageUrl: '/images/spaces/4f.jpg'  },
 ];
-
-function useReveal() {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          el.classList.add('visible');
-          observer.unobserve(el);
-        }
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-  return ref;
-}
 
 function RevealDiv({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   const ref = useReveal();

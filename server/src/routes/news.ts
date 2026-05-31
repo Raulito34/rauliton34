@@ -7,7 +7,8 @@ const router = Router();
 
 router.get('/', asyncHandler(async (req, res) => {
   const { category } = req.query;
-  const where = category && category !== 'all' ? { category: String(category) } : {};
+  const allowedCategories = ['notice', 'news'];
+  const where = typeof category === 'string' && allowedCategories.includes(category) ? { category } : {};
   const news = await prisma.news.findMany({ where, orderBy: { createdAt: 'desc' } });
   res.json(news);
 }));

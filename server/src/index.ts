@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import morgan from 'morgan';
 import { Prisma } from '@prisma/client';
 import { ZodError } from 'zod';
 import { allowedOrigins, readLimiter } from './middleware';
@@ -21,6 +22,7 @@ const PORT = process.env.PORT || 4000;
 app.use(helmet());
 app.use(cors({ origin: allowedOrigins }));
 app.use(express.json({ limit: '10mb' }));
+app.use(morgan('tiny'));
 app.use('/api', readLimiter);
 
 // Health check

@@ -86,6 +86,15 @@ export default function StatusPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    if (!detailSpace) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setDetailSpace(null);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [detailSpace]);
+
   const weeks = useMemo(
     () => generateWeeks(addDays(baseTuesday, pageOffset * 7 * WEEKS_PER_PAGE), WEEKS_PER_PAGE),
     [pageOffset, baseTuesday],
@@ -165,7 +174,7 @@ export default function StatusPage() {
 
             <div className="flex items-center gap-4">
               <button
-                onClick={() => { setPageOffset((p) => Math.max(0, p - 1)); setSelected([]); }}
+                onClick={() => { setPageOffset((p) => Math.max(0, p - 1)); setSelected([]); setDetailSpace(null); }}
                 disabled={pageOffset === 0}
                 className="w-10 h-10 flex items-center justify-center border border-[var(--line-strong)] hover:bg-[var(--canvas-warm)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 aria-label="이전 기간"
@@ -176,7 +185,7 @@ export default function StatusPage() {
                 {formatDate(weeks[0].start)} — {formatDate(weeks[weeks.length - 1].end)}
               </span>
               <button
-                onClick={() => { setPageOffset((p) => p + 1); setSelected([]); }}
+                onClick={() => { setPageOffset((p) => p + 1); setSelected([]); setDetailSpace(null); }}
                 className="w-10 h-10 flex items-center justify-center border border-[var(--line-strong)] hover:bg-[var(--canvas-warm)] transition-colors"
                 aria-label="다음 기간"
               >
@@ -340,6 +349,9 @@ export default function StatusPage() {
           onClick={() => setDetailSpace(null)}
         >
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={spaces.find(s => s.key === detailSpace)?.name}
             className="bg-[var(--canvas)] w-full max-w-[520px] mx-0 lg:mx-4 p-10 max-lg:p-6 animate-fade-up"
             onClick={(e) => e.stopPropagation()}
           >
