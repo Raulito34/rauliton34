@@ -1,19 +1,31 @@
 import { useState } from 'react';
 import type { ContactForm } from '../../types';
+import { api } from '../../services/api';
 
 export default function ContactPage() {
   const [form, setForm] = useState<ContactForm>({
     name: '', email: '', phone: '', subject: '', message: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSubmitting(true);
+    setError(null);
+    try {
+      await api.submitContact(form);
+      setSubmitted(true);
+    } catch {
+      setError('문의 전송 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -88,35 +100,42 @@ export default function ContactPage() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-[13px] text-[#6B6B6B] mb-2">이름 *</label>
-                    <input type="text" name="name" value={form.name} onChange={handleChange} required
+                    <label htmlFor="contact-name" className="block text-[13px] text-[#6B6B6B] mb-2">이름 *</label>
+                    <input id="contact-name" type="text" name="name" value={form.name} onChange={handleChange} required maxLength={80}
                       className="w-full border border-[rgba(26,26,26,0.15)] bg-transparent px-4 py-4 text-[15px] focus:outline-none focus:border-[#1A1A1A] transition-colors" />
                   </div>
                   <div>
-                    <label className="block text-[13px] text-[#6B6B6B] mb-2">이메일 *</label>
-                    <input type="email" name="email" value={form.email} onChange={handleChange} required
+                    <label htmlFor="contact-email" className="block text-[13px] text-[#6B6B6B] mb-2">이메일 *</label>
+                    <input id="contact-email" type="email" name="email" value={form.email} onChange={handleChange} required maxLength={320}
                       className="w-full border border-[rgba(26,26,26,0.15)] bg-transparent px-4 py-4 text-[15px] focus:outline-none focus:border-[#1A1A1A] transition-colors" />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-[13px] text-[#6B6B6B] mb-2">연락처</label>
-                    <input type="tel" name="phone" value={form.phone} onChange={handleChange}
+                    <label htmlFor="contact-phone" className="block text-[13px] text-[#6B6B6B] mb-2">연락처</label>
+                    <input id="contact-phone" type="tel" name="phone" value={form.phone} onChange={handleChange} maxLength={40}
                       className="w-full border border-[rgba(26,26,26,0.15)] bg-transparent px-4 py-4 text-[15px] focus:outline-none focus:border-[#1A1A1A] transition-colors" />
                   </div>
                   <div>
-                    <label className="block text-[13px] text-[#6B6B6B] mb-2">제목 *</label>
-                    <input type="text" name="subject" value={form.subject} onChange={handleChange} required
+                    <label htmlFor="contact-subject" className="block text-[13px] text-[#6B6B6B] mb-2">제목 *</label>
+                    <input id="contact-subject" type="text" name="subject" value={form.subject} onChange={handleChange} required maxLength={200}
                       className="w-full border border-[rgba(26,26,26,0.15)] bg-transparent px-4 py-4 text-[15px] focus:outline-none focus:border-[#1A1A1A] transition-colors" />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-[13px] text-[#6B6B6B] mb-2">문의 내용 *</label>
-                  <textarea name="message" value={form.message} onChange={handleChange} required rows={6}
+                  <label htmlFor="contact-message" className="block text-[13px] text-[#6B6B6B] mb-2">문의 내용 *</label>
+                  <textarea id="contact-message" name="message" value={form.message} onChange={handleChange} required rows={6} maxLength={5000}
                     className="w-full border border-[rgba(26,26,26,0.15)] bg-transparent px-4 py-4 text-[15px] focus:outline-none focus:border-[#1A1A1A] transition-colors resize-none" />
                 </div>
+                {error && (
+                  <div role="alert" className="p-4 border-l-2 border-[#1A1A1A] bg-[rgba(26,26,26,0.04)] text-[14px] text-[#3A3A3A]">
+                    {error}
+                  </div>
+                )}
                 <div className="pt-2">
-                  <button type="submit" className="btn-primary">문의하기</button>
+                  <button type="submit" disabled={submitting} className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed">
+                    <span>{submitting ? '전송 중…' : '문의하기'}</span>
+                  </button>
                 </div>
               </form>
             </div>

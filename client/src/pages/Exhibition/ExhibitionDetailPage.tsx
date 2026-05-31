@@ -7,19 +7,35 @@ export default function ExhibitionDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [exhibition, setExhibition] = useState<(Exhibition & { details?: string }) | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     if (!id) return;
+    let cancelled = false;
+    setLoading(true);
+    setError(false);
     api.getExhibition(Number(id))
-      .then((data) => setExhibition(data as Exhibition & { details?: string }))
-      .catch(() => setExhibition(null))
-      .finally(() => setLoading(false));
+      .then((data) => { if (!cancelled) setExhibition(data as Exhibition & { details?: string }); })
+      .catch(() => { if (!cancelled) setError(true); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
   }, [id]);
 
   if (loading) {
     return (
       <div className="text-center py-40">
         <p className="text-[#B0B0B0] text-[15px]">전시 정보를 불러오는 중...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-40">
+        <p className="text-[#6B6B6B] text-[15px]">전시 정보를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</p>
+        <Link to="/exhibition" className="link-underline text-[14px] mt-6 inline-block">
+          전시 목록으로
+        </Link>
       </div>
     );
   }

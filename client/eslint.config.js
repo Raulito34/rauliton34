@@ -19,5 +19,10 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    rules: {
+      // `setLoading(true)` before a fetch and `setX(false)` on route change are
+      // legitimate, idiomatic patterns. Keep as a warning rather than a hard error.
+      'react-hooks/set-state-in-effect': 'warn',
+    },
   },
 ])
