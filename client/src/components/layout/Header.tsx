@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 
 const navItems = [
   {
@@ -78,6 +79,10 @@ export default function Header() {
       return () => { document.body.style.overflow = prev; };
     }
   }, [mobileOpen]);
+
+  // Trap focus inside the mobile overlay; Escape closes it.
+  const closeMobile = useCallback(() => setMobileOpen(false), []);
+  const mobileNavRef = useFocusTrap<HTMLElement>(mobileOpen, closeMobile);
 
   const isActive = (path: string) =>
     path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);
@@ -182,6 +187,7 @@ export default function Header() {
       {/* Mobile Nav — Full-screen overlay */}
       {mobileOpen && (
         <nav
+          ref={mobileNavRef}
           id="mobile-nav"
           role="dialog"
           aria-modal="true"
