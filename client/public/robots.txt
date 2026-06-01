@@ -1,10 +1,11 @@
-# TEMPORARY — site in preparation. Block all crawlers until launch.
-# To re-enable search after launch, restore the rules below:
-#   User-agent: *
-#   Allow: /
-#   Disallow: /admin/
-#   Sitemap: https://sunartcenter.co.kr/sitemap.xml
-# and remove the <meta name="robots" content="noindex"> from index.html.
+# Site in preparation — kept OUT of search via <meta name="robots" content="noindex">.
+# Crawling is intentionally ALLOWED so search engines can re-crawl, SEE the
+# noindex tag, and drop the pages from their index. (Disallow: / would prevent
+# de-indexing because the crawler could never read the noindex.)
+#
+# At launch, to re-enable search: remove the noindex meta from index.html
+# (this robots.txt can stay as-is, or tighten Disallow to /admin/ only).
 
 User-agent: *
-Disallow: /
+Allow: /
+Disallow: /admin/
