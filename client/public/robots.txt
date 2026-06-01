@@ -1,5 +1,10 @@
-User-agent: *
-Allow: /
-Disallow: /admin/
+# TEMPORARY — site in preparation. Block all crawlers until launch.
+# To re-enable search after launch, restore the rules below:
+#   User-agent: *
+#   Allow: /
+#   Disallow: /admin/
+#   Sitemap: https://sunartcenter.co.kr/sitemap.xml
+# and remove the <meta name="robots" content="noindex"> from index.html.
 
-Sitemap: https://sunartcenter.co.kr/sitemap.xml
+User-agent: *
+Disallow: /
